@@ -1,0 +1,8 @@
+---
+description: 커밋 메시지 자동화 - Conventional Commits 형식 + 한국어 설명
+alwaysApply: false
+---
+
+# 커밋 메시지 규칙
+
+git commit을 수행할 때 **반드시** `.cursorrules` 파일의 커밋 메시지 규칙을 따르세요.
