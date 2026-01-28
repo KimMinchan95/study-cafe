@@ -1,16 +1,37 @@
 services:
-  db:
-    image: postgres:16
-    container_name: study-cafe-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: study_cafe
-    ports:
-      - '5432:5432'
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
+    db:
+        image: postgres:16
+        container_name: study-cafe-db
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: study_cafe
+        ports:
+            - '5432:5432'
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U postgres']
+            interval: 2s
+            timeout: 2s
+            retries: 20
+
+    nestjs-app:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: study-cafe-api
+        ports:
+            - '3001:3001'
+        depends_on:
+            db:
+                condition: service_healthy
+        volumes:
+            - .:/usr/src/app
+            - /usr/src/app/node_modules
+        environment:
+            DATABASE_URL: postgresql://postgres:postgres@db:5432/study_cafe
 
 volumes:
-  postgres_data:
+    postgres_data:
