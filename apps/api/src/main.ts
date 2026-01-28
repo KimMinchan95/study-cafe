@@ -3,9 +3,11 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { ResponseInterceptor, HttpExceptionFilter } from './common';
 import { AppConfigService } from './config';
+import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    app.useLogger(app.get(Logger));
     const configService = app.get(AppConfigService);
 
     // 전역 ValidationPipe 등록
