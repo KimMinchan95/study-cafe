@@ -7,18 +7,29 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
+enum AccountStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+}
+
 model Account {
-  accountId       BigInt  @id @default(autoincrement()) @map("account_id")
-  email           String  @unique @map("email") @db.Text
-  password        String  @map("password") @db.Text
-  name            String  @map("name") @db.VarChar(30)
-  displayName     String  @map("display_name") @db.VarChar(30)
-  role            String  @map("role") @db.VarChar(15)
-  status          String  @default("ACTIVE") @map("status") @db.VarChar(10)
-  createdAt       BigInt  @map("created_at")
-  updatedAt       BigInt? @map("updated_at")
-  lastLoginAt     BigInt? @map("last_login_at")
-  emailVerifiedAt BigInt? @map("email_verified_at")
+  accountId       BigInt        @id @default(autoincrement()) @map("account_id")
+  email           String        @unique @map("email") @db.Text
+  password        String        @map("password") @db.Text
+  name            String        @map("name") @db.VarChar(30)
+  displayName     String        @map("display_name") @db.VarChar(30)
+  role            Role          @default(USER) @map("role")
+  status          AccountStatus @default(ACTIVE) @map("status")
+  createdAt       DateTime  @map("created_at") @default(now())
+  updatedAt       DateTime? @map("updated_at") @updatedAt
+  lastLoginAt     DateTime? @map("last_login_at")
+  emailVerifiedAt DateTime? @map("email_verified_at")
 
   @@index([email])
   @@map("accounts")
