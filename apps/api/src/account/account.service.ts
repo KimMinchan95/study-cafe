@@ -4,6 +4,11 @@ import { UpdateAccountDto } from './dto/update-account.dto';
 import { PrismaConnector } from '../prisma';
 import * as bcrypt from 'bcrypt';
 
+function toAccountResponse(account: { password: string; accountId: bigint;[key: string]: unknown }) {
+  const { password: _password, accountId, ...rest } = account;
+  return { accountId: String(accountId), ...rest };
+}
+
 @Injectable()
 export class AccountService {
   constructor(private readonly prisma: PrismaConnector) { }
@@ -28,30 +33,36 @@ export class AccountService {
       },
     });
 
-    const { password: _password, ...result } = account;
-    return result;
+    return toAccountResponse(account);
   }
 
-  findAll() {
-    return this.prisma.account.findMany();
+  async findAll() {
+    const accounts = await this.prisma.account.findMany();
+    return accounts.map(toAccountResponse);
   }
 
-  findOne(accountId: bigint) {
-    return this.prisma.account.findUnique({
+  async findOne(accountId: bigint) {
+    const account = await this.prisma.account.findUnique({
       where: { accountId },
     });
+    if (!account) {
+      return null;
+    }
+    return toAccountResponse(account);
   }
 
-  update(accountId: bigint, updateAccountDto: UpdateAccountDto) {
-    return this.prisma.account.update({
+  async update(accountId: bigint, updateAccountDto: UpdateAccountDto) {
+    const account = await this.prisma.account.update({
       where: { accountId },
       data: updateAccountDto,
     });
+    return toAccountResponse(account);
   }
 
-  remove(accountId: bigint) {
-    return this.prisma.account.delete({
+  async remove(accountId: bigint) {
+    const account = await this.prisma.account.delete({
       where: { accountId },
     });
+    return toAccountResponse(account);
   }
 }
