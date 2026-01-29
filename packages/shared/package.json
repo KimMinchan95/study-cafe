@@ -14,5 +14,8 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@repo/typescript-config": "workspace:*"
+  }
 }
