@@ -28,23 +28,30 @@ export class AccountService {
       },
     });
 
-    const { password, ...result } = account;
+    const { password: _password, ...result } = account;
     return result;
   }
 
   findAll() {
-    return `This action returns all account`;
+    return this.prisma.account.findMany();
   }
 
-  findOne(accountId: BigInt) {
-    return `This action returns a #${accountId} account`;
+  findOne(accountId: bigint) {
+    return this.prisma.account.findUnique({
+      where: { accountId },
+    });
   }
 
-  update(accountId: BigInt, updateAccountDto: UpdateAccountDto) {
-    return `This action updates a #${accountId} account`;
+  update(accountId: bigint, updateAccountDto: UpdateAccountDto) {
+    return this.prisma.account.update({
+      where: { accountId },
+      data: updateAccountDto,
+    });
   }
 
-  remove(accountId: BigInt) {
-    return `This action removes a #${accountId} account`;
+  remove(accountId: bigint) {
+    return this.prisma.account.delete({
+      where: { accountId },
+    });
   }
 }
