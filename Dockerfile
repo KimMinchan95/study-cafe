@@ -15,14 +15,9 @@ COPY packages/typescript-config/package.json ./packages/typescript-config/
 COPY packages/ui/package.json ./packages/ui/
 
 # 의존성 설치
-RUN pnpm install --frozen-lockfile
-
-# 소스 복사
-COPY . .
-
-# API 빌드
-RUN pnpm --filter api build
+RUN pnpm install
 
 WORKDIR /usr/src/app/apps/api
 
-CMD ["pnpm", "start:prod"]
+# 개발 모드로 실행 (빌드 없이)
+CMD ["pnpm", "dev"]
