@@ -1,5 +1,6 @@
 import { IsEmail, MinLength, IsNotEmpty, IsString, MaxLength, Matches } from 'class-validator';
 import { BaseAccountFieldsDto } from './base-account.dto';
+import { ErrorCode } from '@repo/shared';
 
 export class CreateAccountDto extends BaseAccountFieldsDto {
     @IsNotEmpty()
@@ -12,7 +13,7 @@ export class CreateAccountDto extends BaseAccountFieldsDto {
     @MaxLength(30)
     @Matches(
         /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]+$/,
-        { message: 'PASSWORD_MUST_CONTAIN_LETTER_AND_NUMBER' }
+        { message: ErrorCode.PASSWORD_MUST_CONTAIN_LETTER_AND_NUMBER }
     )
     password: string;
 }

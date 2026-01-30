@@ -3,6 +3,7 @@ import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { PrismaConnector } from '../prisma';
 import * as bcrypt from 'bcrypt';
+import { ErrorCode } from '@repo/shared';
 
 function toAccountResponse(account: { password: string; accountId: bigint;[key: string]: unknown }) {
   const { password: _password, accountId, ...rest } = account;
@@ -19,7 +20,7 @@ export class AccountService {
     });
 
     if (existingAccount) {
-      throw new ConflictException('EMAIL_ALREADY_EXISTS');
+      throw new ConflictException(ErrorCode.EMAIL_ALREADY_EXISTS);
     }
 
     const hashedPassword = await bcrypt.hash(createAccountDto.password, 10);
@@ -44,6 +45,16 @@ export class AccountService {
   async findOne(accountId: bigint) {
     const account = await this.prisma.account.findUnique({
       where: { accountId },
+    });
+    if (!account) {
+      return null;
+    }
+    return toAccountResponse(account);
+  }
+
+  async findOneByEmail(email: string) {
+    const account = await this.prisma.account.findUnique({
+      where: { email },
     });
     if (!account) {
       return null;
