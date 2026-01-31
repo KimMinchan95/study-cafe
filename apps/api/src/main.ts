@@ -1,6 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
+import { createClient } from 'redis';
+import { RedisStore } from 'connect-redis';
+import session from 'express-session';
 import { AppModule } from './app.module';
 import { ResponseInterceptor, HttpExceptionFilter } from './common';
 import { AppConfigService } from './config';
@@ -10,6 +13,33 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.useLogger(app.get(Logger));
     const configService = app.get(AppConfigService);
+
+    const redisUrl = configService.redisPassword
+        ? `redis://:${configService.redisPassword}@${configService.redisHost}:${configService.redisPort}`
+        : `redis://${configService.redisHost}:${configService.redisPort}`;
+    const redisClient = createClient({ url: redisUrl });
+    redisClient.on('error', (err) => app.get(Logger).error(err, 'Redis Client Error'));
+    await redisClient.connect();
+
+    const redisStore = new RedisStore({
+        client: redisClient,
+        prefix: 'sess:',
+    });
+
+    app.use(
+        session({
+            store: redisStore,
+            secret: configService.sessionSecret,
+            resave: false,
+            saveUninitialized: false,
+            cookie: {
+                httpOnly: true,
+                secure: configService.isProduction,
+                sameSite: 'lax',
+                maxAge: 24 * 60 * 60 * 1000,
+            },
+        }),
+    );
 
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
