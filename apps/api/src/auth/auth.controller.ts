@@ -1,12 +1,4 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Logger,
-  Post,
-  Request,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/login.dto';
 import { toAccountResponse, toJsonSafeResponse } from '../account/util';
@@ -24,21 +16,14 @@ interface RequestWithAccount extends Request {
 
 @Controller('auth')
 export class AuthController {
-  private readonly logger = new Logger(AuthController.name);
-
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Body() _body: LoginDto, @Request() req: RequestWithAccount) {
     const account = req.user;
-    try {
-      await new Promise<void>((resolve, reject) => {
-        req.login(account, (err) => (err ? reject(err) : resolve()));
-      });
-      return toJsonSafeResponse(toAccountResponse(account));
-    } catch (err) {
-      this.logger.error('Login failed', err instanceof Error ? err.stack : err);
-      throw err;
-    }
+    await new Promise<void>((resolve, reject) => {
+      req.login(account, (err) => (err ? reject(err) : resolve()));
+    });
+    return toJsonSafeResponse(toAccountResponse(account));
   }
 
   @UseGuards(SessionGuard)
