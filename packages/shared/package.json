@@ -12,6 +12,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "dev": "tsc -p tsconfig.build.json --watch --preserveWatchOutput",
     "test": "echo \"Error: no test specified\" && exit 1",
     "check-types": "tsc --noEmit"
   },
