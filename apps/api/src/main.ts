@@ -1,34 +1,30 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
-import { createClient } from 'redis';
-import { RedisStore } from 'connect-redis';
 import session from 'express-session';
+import passport from 'passport';
 import { AppModule } from './app.module';
 import { ResponseInterceptor, HttpExceptionFilter } from './common';
 import { AppConfigService } from './config';
+import { RedisService } from './redis';
 import { Logger } from 'nestjs-pino';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    await app.init();
+
     app.useLogger(app.get(Logger));
     const configService = app.get(AppConfigService);
+    const redisService = app.get(RedisService);
 
-    const redisUrl = configService.redisPassword
-        ? `redis://:${configService.redisPassword}@${configService.redisHost}:${configService.redisPort}`
-        : `redis://${configService.redisHost}:${configService.redisPort}`;
-    const redisClient = createClient({ url: redisUrl });
-    redisClient.on('error', (err) => app.get(Logger).error(err, 'Redis Client Error'));
-    await redisClient.connect();
-
-    const redisStore = new RedisStore({
-        client: redisClient,
-        prefix: 'sess:',
-    });
+    const redisClient = redisService.getClient();
+    redisClient.on('error', (err: Error) => app.get(Logger).error(err, 'Redis Client Error'));
 
     app.use(
+        // express-session은 CommonJS라 타입 해석 시 경고 발생
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
         session({
-            store: redisStore,
+            store: redisService.getSessionStore(),
             secret: configService.sessionSecret,
             resave: false,
             saveUninitialized: false,
@@ -40,6 +36,11 @@ async function bootstrap() {
             },
         }),
     );
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    app.use(passport.initialize());
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    app.use(passport.session());
 
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
@@ -68,4 +69,4 @@ async function bootstrap() {
     await app.listen(configService.port);
     console.log(`Server running on http://localhost:${configService.port}`);
 }
-bootstrap();
+void bootstrap();
