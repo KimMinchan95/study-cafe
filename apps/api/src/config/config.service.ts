@@ -24,12 +24,8 @@ export class AppConfigService {
     return this.configService.get('CORS_ORIGIN', { infer: true });
   }
 
-  get jwtSecret(): string | undefined {
-    return this.configService.get('JWT_SECRET', { infer: true });
-  }
-
-  get jwtExpiresIn(): number {
-    return this.configService.get('JWT_EXPIRES_IN', { infer: true });
+  get bcryptSaltRounds(): number {
+    return this.configService.get('BCRYPT_SALT_ROUNDS', { infer: true });
   }
 
   get isDevelopment(): boolean {

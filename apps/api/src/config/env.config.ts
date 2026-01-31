@@ -30,14 +30,10 @@ export class EnvironmentVariables {
   @IsOptional()
   CORS_ORIGIN: string = 'http://localhost:3000';
 
-  @IsString()
-  @IsOptional()
-  JWT_SECRET?: string;
-
   @Type(() => Number)
   @IsNumber()
   @IsOptional()
-  JWT_EXPIRES_IN?: number = 3600;
+  BCRYPT_SALT_ROUNDS?: number = 10;
 }
 
 export function validate(config: Record<string, unknown>) {

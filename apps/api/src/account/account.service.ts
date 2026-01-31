@@ -2,17 +2,16 @@ import { Injectable, ConflictException } from '@nestjs/common';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { PrismaConnector } from '../prisma';
-import * as bcrypt from 'bcrypt';
+import { PasswordService } from '../password';
 import { ErrorCode } from '@repo/shared';
-
-function toAccountResponse(account: { password: string; accountId: bigint;[key: string]: unknown }) {
-  const { password: _password, accountId, ...rest } = account;
-  return { accountId: String(accountId), ...rest };
-}
+import { toAccountResponse, toAccountResponseWithPassword } from './util';
 
 @Injectable()
 export class AccountService {
-  constructor(private readonly prisma: PrismaConnector) { }
+  constructor(
+    private readonly prisma: PrismaConnector,
+    private readonly passwordService: PasswordService,
+  ) { }
 
   async create(createAccountDto: CreateAccountDto) {
     const existingAccount = await this.prisma.account.findUnique({
@@ -23,7 +22,7 @@ export class AccountService {
       throw new ConflictException(ErrorCode.EMAIL_ALREADY_EXISTS);
     }
 
-    const hashedPassword = await bcrypt.hash(createAccountDto.password, 10);
+    const hashedPassword = await this.passwordService.hash(createAccountDto.password);
 
     const account = await this.prisma.account.create({
       data: {
@@ -60,6 +59,16 @@ export class AccountService {
       return null;
     }
     return toAccountResponse(account);
+  }
+
+  async findAccountByEmailWithPassword(email: string) {
+    const account = await this.prisma.account.findUnique({
+      where: { email },
+    });
+    if (!account) {
+      return null;
+    }
+    return toAccountResponseWithPassword(account);
   }
 
   async update(accountId: bigint, updateAccountDto: UpdateAccountDto) {

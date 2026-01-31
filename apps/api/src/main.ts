@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
 import { ResponseInterceptor, HttpExceptionFilter } from './common';
 import { AppConfigService } from './config';
@@ -9,6 +10,8 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.useLogger(app.get(Logger));
     const configService = app.get(AppConfigService);
+
+    useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
     // 전역 ValidationPipe 등록
     app.useGlobalPipes(
