@@ -19,3 +19,11 @@ export function toAccountResponseWithPassword(
     const { accountId, ...rest } = account;
     return { accountId: String(accountId), ...rest } as AccountResponseWithPassword;
 }
+
+export function toJsonSafeResponse<T>(obj: T): T {
+    return JSON.parse(
+        JSON.stringify(obj, (_key, value) =>
+            typeof value === 'bigint' ? String(value) : value,
+        ),
+    ) as T;
+}

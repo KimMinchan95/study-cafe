@@ -5,7 +5,7 @@ import { RedisService } from '../../redis';
 import { ErrorCode } from '@repo/shared';
 
 export interface AccountInterface {
-  accountId: string;
+  accountId: string | bigint;
 }
 
 export interface SessionPayload {
@@ -25,7 +25,7 @@ export class SessionSerializer extends PassportSerializer {
   }
 
   serializeUser(account: AccountInterface, done: (err: Error | null, payload?: SessionPayload) => void): void {
-    done(null, { accountId: account.accountId });
+    done(null, { accountId: String(account.accountId) });
   }
 
   async deserializeUser(payload: SessionPayload, done: (err: Error | null, user?: unknown) => void): Promise<void> {

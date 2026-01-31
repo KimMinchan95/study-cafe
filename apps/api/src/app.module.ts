@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma';
@@ -9,10 +9,23 @@ import { LoggerModule } from 'nestjs-pino';
 import { AccountService } from './account/account.service';
 import { AccountModule } from './account/account.module';
 import { AuthModule } from './auth/auth.module';
+import { SessionMiddleware } from './session/session.middleware';
 
 @Module({
-    imports: [AppConfigModule, PrismaModule, RedisModule, PasswordModule, LoggerModule.forRoot(), AccountModule, AuthModule],
-    controllers: [AppController],
-    providers: [AppService, AccountService],
+  imports: [
+    AppConfigModule,
+    PrismaModule,
+    RedisModule,
+    PasswordModule,
+    LoggerModule.forRoot(),
+    AccountModule,
+    AuthModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService, AccountService, SessionMiddleware],
 })
-export class AppModule { }
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer): void {
+    consumer.apply(SessionMiddleware).forRoutes('*');
+  }
+}

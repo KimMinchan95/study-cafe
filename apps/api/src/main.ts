@@ -1,46 +1,23 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
-import session from 'express-session';
-import passport from 'passport';
 import { AppModule } from './app.module';
 import { ResponseInterceptor, HttpExceptionFilter } from './common';
 import { AppConfigService } from './config';
 import { RedisService } from './redis';
 import { Logger } from 'nestjs-pino';
 
+
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     await app.init();
 
     app.useLogger(app.get(Logger));
-    const configService = app.get(AppConfigService);
     const redisService = app.get(RedisService);
-
     const redisClient = redisService.getClient();
-    redisClient.on('error', (err: Error) => app.get(Logger).error(err, 'Redis Client Error'));
-
-    app.use(
-        // express-session은 CommonJS라 타입 해석 시 경고 발생
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        session({
-            store: redisService.getSessionStore(),
-            secret: configService.sessionSecret,
-            resave: false,
-            saveUninitialized: false,
-            cookie: {
-                httpOnly: true,
-                secure: configService.isProduction,
-                sameSite: 'lax',
-                maxAge: 24 * 60 * 60 * 1000,
-            },
-        }),
+    redisClient.on('error', (err: Error) =>
+        app.get(Logger).error(err, 'Redis Client Error'),
     );
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    app.use(passport.initialize());
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    app.use(passport.session());
 
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
@@ -60,6 +37,7 @@ async function bootstrap() {
     app.useGlobalInterceptors(new ResponseInterceptor());
     app.useGlobalFilters(new HttpExceptionFilter());
 
+    const configService = app.get(AppConfigService);
     app.enableCors({
         origin: configService.corsOrigin,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
