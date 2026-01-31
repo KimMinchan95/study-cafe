@@ -8,7 +8,7 @@ import {
     Validate,
 } from 'class-validator';
 import { BaseAccountFieldsDto } from './base-account.dto';
-import { ErrorCode } from '@repo/shared';
+import { ErrorCode, PASSWORD_PATTERN } from '@repo/shared';
 import { UniqueEmailConstraint } from '../validators/unique-email.validator';
 
 export class CreateAccountDto extends BaseAccountFieldsDto {
@@ -21,7 +21,7 @@ export class CreateAccountDto extends BaseAccountFieldsDto {
     @IsString()
     @MinLength(8)
     @MaxLength(30)
-    @Matches(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]+$/, {
+    @Matches(PASSWORD_PATTERN, {
         message: ErrorCode.PASSWORD_MUST_CONTAIN_LETTER_AND_NUMBER,
     })
     password: string;
