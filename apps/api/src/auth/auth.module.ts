@@ -6,6 +6,7 @@ import { AccountModule } from '../account/account.module';
 import { LocalStrategy } from './strategies/local.strategy';
 import { SessionSerializer } from './serializers/session.serializer';
 import { SessionGuard } from './guards/session.guard';
+import { OwnerGuard } from './guards/owner.guard';
 import { RedisModule } from '../redis';
 
 @Module({
@@ -15,7 +16,7 @@ import { RedisModule } from '../redis';
     RedisModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, SessionSerializer, SessionGuard],
-  exports: [SessionGuard],
+  providers: [AuthService, LocalStrategy, SessionSerializer, SessionGuard, OwnerGuard],
+  exports: [SessionGuard, OwnerGuard],
 })
 export class AuthModule { }

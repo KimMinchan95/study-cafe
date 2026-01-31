@@ -12,6 +12,7 @@ import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { SessionGuard } from '../auth/guards/session.guard';
+import { OwnerGuard } from '../auth/guards/owner.guard';
 
 @Controller('accounts')
 export class AccountController {
@@ -34,7 +35,7 @@ export class AccountController {
     return this.accountService.findOne(BigInt(accountId));
   }
 
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   @Patch(':accountId')
   update(
     @Param('accountId') accountId: string,
@@ -43,7 +44,7 @@ export class AccountController {
     return this.accountService.update(BigInt(accountId), updateAccountDto);
   }
 
-  @UseGuards(SessionGuard)
+  @UseGuards(SessionGuard, OwnerGuard)
   @Delete(':accountId')
   remove(@Param('accountId') accountId: string) {
     return this.accountService.remove(BigInt(accountId));
