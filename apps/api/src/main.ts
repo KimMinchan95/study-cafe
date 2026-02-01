@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
-import { ResponseInterceptor, HttpExceptionFilter } from './common';
 import { AppConfigService } from './config';
 import { RedisService } from './redis';
 import { Logger } from 'nestjs-pino';
@@ -32,10 +31,6 @@ async function bootstrap() {
             },
         }),
     );
-
-    // 전역 인터셉터 & 필터 등록
-    app.useGlobalInterceptors(new ResponseInterceptor());
-    app.useGlobalFilters(new HttpExceptionFilter());
 
     const configService = app.get(AppConfigService);
     app.enableCors({

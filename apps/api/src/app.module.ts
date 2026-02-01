@@ -1,4 +1,5 @@
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaModule } from './prisma';
@@ -10,6 +11,7 @@ import { AccountService } from './account/account.service';
 import { AccountModule } from './account/account.module';
 import { AuthModule } from './auth/auth.module';
 import { SessionMiddleware } from './session/session.middleware';
+import { HttpExceptionFilter, ResponseInterceptor } from './common';
 
 @Module({
   imports: [
@@ -22,7 +24,13 @@ import { SessionMiddleware } from './session/session.middleware';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, AccountService, SessionMiddleware],
+  providers: [
+    AppService,
+    AccountService,
+    SessionMiddleware,
+    { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
+    { provide: APP_FILTER, useClass: HttpExceptionFilter },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): void {
