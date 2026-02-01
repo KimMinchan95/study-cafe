@@ -1,4 +1,5 @@
 import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
 import { LoginDto } from './dto/login.dto';
 import { toAccountResponse, toJsonSafeResponse } from '../account/util';
@@ -14,6 +15,7 @@ interface RequestWithAccount extends Request {
   session: { destroy: (callback: (err?: Error) => void) => void };
 }
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   @UseGuards(AuthGuard('local'))
