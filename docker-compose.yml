@@ -17,6 +17,20 @@ services:
             timeout: 2s
             retries: 20
 
+    redis:
+        image: redis:7-alpine
+        container_name: study-cafe-redis
+        restart: unless-stopped
+        ports:
+            - '6379:6379'
+        volumes:
+            - redis_data:/data
+        healthcheck:
+            test: ['CMD', 'redis-cli', 'ping']
+            interval: 2s
+            timeout: 2s
+            retries: 10
+
     nestjs-app:
         build:
             context: .
@@ -27,10 +41,15 @@ services:
         depends_on:
             db:
                 condition: service_healthy
+            redis:
+                condition: service_healthy
         volumes:
             - .:/usr/src/app
         environment:
             DATABASE_URL: postgresql://postgres:postgres@db:5432/study_cafe
+            REDIS_HOST: redis
+            REDIS_PORT: 6379
 
 volumes:
     postgres_data:
+    redis_data:

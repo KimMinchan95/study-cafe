@@ -1,14 +1,24 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { useContainer } from 'class-validator';
 import { AppModule } from './app.module';
-import { ResponseInterceptor, HttpExceptionFilter } from './common';
 import { AppConfigService } from './config';
+import { RedisService } from './redis';
 import { Logger } from 'nestjs-pino';
+
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+    await app.init();
+
     app.useLogger(app.get(Logger));
-    const configService = app.get(AppConfigService);
+    const redisService = app.get(RedisService);
+    const redisClient = redisService.getClient();
+    redisClient.on('error', (err: Error) =>
+        app.get(Logger).error(err, 'Redis Client Error'),
+    );
+
+    useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
     // 전역 ValidationPipe 등록
     app.useGlobalPipes(
@@ -22,10 +32,7 @@ async function bootstrap() {
         }),
     );
 
-    // 전역 인터셉터 & 필터 등록
-    app.useGlobalInterceptors(new ResponseInterceptor());
-    app.useGlobalFilters(new HttpExceptionFilter());
-
+    const configService = app.get(AppConfigService);
     app.enableCors({
         origin: configService.corsOrigin,
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
@@ -35,4 +42,4 @@ async function bootstrap() {
     await app.listen(configService.port);
     console.log(`Server running on http://localhost:${configService.port}`);
 }
-bootstrap();
+void bootstrap();
