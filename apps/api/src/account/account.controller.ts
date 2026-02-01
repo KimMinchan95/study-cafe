@@ -8,12 +8,14 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AccountService } from './account.service';
 import { CreateAccountDto } from './dto/create-account.dto';
 import { UpdateAccountDto } from './dto/update-account.dto';
 import { SessionGuard } from '../auth/guards/session.guard';
 import { OwnerGuard } from '../auth/guards/owner.guard';
 
+@ApiTags('account')
 @Controller('accounts')
 export class AccountController {
   constructor(private readonly accountService: AccountService) { }

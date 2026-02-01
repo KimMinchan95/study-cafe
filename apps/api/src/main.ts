@@ -5,10 +5,13 @@ import { AppModule } from './app.module';
 import { AppConfigService } from './config';
 import { RedisService } from './redis';
 import { Logger } from 'nestjs-pino';
-
+import { setupSwagger } from './config';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
+
+    setupSwagger(app);
+
     await app.init();
 
     app.useLogger(app.get(Logger));

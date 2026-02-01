@@ -46,6 +46,7 @@ services:
         volumes:
             - .:/usr/src/app
         environment:
+            PORT: 3001
             DATABASE_URL: postgresql://postgres:postgres@db:5432/study_cafe
             REDIS_HOST: redis
             REDIS_PORT: 6379
