@@ -1,0 +1,91 @@
+name: Lighthouse 성능 점수
+
+on:
+    pull_request:
+        types: [opened, synchronize]
+        branches:
+            - 'main'
+        paths:
+            - 'apps/web/**'
+            - '.github/workflows/lighthouse.yml'
+            - '.github/lighthouserc.json'
+
+permissions:
+    contents: read
+    pull-requests: write
+
+jobs:
+    lighthouse:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: 9.0.0
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 24
+                  cache: 'pnpm'
+
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
+
+            - name: Build web app
+              working-directory: apps/web
+              run: pnpm build
+              env:
+                  NODE_ENV: production
+
+            - name: Start Next.js server
+              working-directory: apps/web
+              run: |
+                  pnpm start &
+                  echo "Waiting for server to start..."
+                  for i in {1..30}; do
+                    if curl -f http://localhost:3000 > /dev/null 2>&1; then
+                      echo "Server is ready!"
+                      break
+                    fi
+                    echo "Attempt $i: Server not ready yet..."
+                    sleep 2
+                  done
+                  echo "Warming up server..."
+                  for i in {1..3}; do
+                    curl -s http://localhost:3000 > /dev/null 2>&1
+                    sleep 1
+                  done
+                  echo "Server warmed up!"
+              env:
+                  PORT: 3000
+
+            - name: Run Lighthouse CI
+              uses: treosh/lighthouse-ci-action@v11
+              with:
+                  urls: |
+                      http://localhost:3000
+                  uploadArtifacts: true
+                  temporaryPublicStorage: true
+                  configPath: ./.github/lighthouserc.json
+
+            - name: Format Lighthouse score
+              uses: actions/github-script@v7
+              if: always()
+              with:
+                  script: |
+                      const { execSync } = require('child_process');
+                      const comment = execSync(
+                          'node .github/scripts/format-lighthouse-comment.mjs',
+                          { encoding: 'utf-8' }
+                      );
+
+                      github.rest.issues.createComment({
+                          issue_number: context.issue.number,
+                          owner: context.repo.owner,
+                          repo: context.repo.repo,
+                          body: comment
+                      });
