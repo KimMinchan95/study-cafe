@@ -38,7 +38,7 @@ jobs:
 
             - name: Run size-limit
               working-directory: apps/web
-              run: pnpm size-limit --json > size-limit-results.json || true
+              run: pnpm size-limit > size-limit-results.txt 2>&1 || true
               continue-on-error: true
 
             - name: Comment bundle size
