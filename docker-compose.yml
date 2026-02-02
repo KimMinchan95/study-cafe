@@ -31,10 +31,10 @@ services:
             timeout: 2s
             retries: 10
 
-    nestjs-app:
+    api:
         build:
             context: .
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.api
         container_name: study-cafe-api
         ports:
             - '3001:3001'
@@ -50,6 +50,27 @@ services:
             DATABASE_URL: postgresql://postgres:postgres@db:5432/study_cafe
             REDIS_HOST: redis
             REDIS_PORT: 6379
+
+    # web 실행 주석 처리
+    # web:
+    #     build:
+    #         context: .
+    #         dockerfile: Dockerfile.web
+    #     container_name: study-cafe-web
+    #     ports:
+    #         - '3000:3000'
+    #     volumes:
+    #         - .:/usr/src/app
+    #         - /usr/src/app/apps/web/.next
+    #         - /usr/src/app/node_modules
+    #     environment:
+    #         NODE_ENV: development
+    #         PORT: 3000
+    #         NEXT_PUBLIC_API_URL: http://api:3001
+    #         WATCHPACK_POLLING: 'true'
+    #         CHOKIDAR_USEPOLLING: 'true'
+    #     depends_on:
+    #         - api
 
 volumes:
     postgres_data:
