@@ -16,26 +16,21 @@ function hasValidContent(content) {
         return false;
     }
 
-    // 빈 불릿만 있는지 확인
     const lines = content
         .split('\n')
         .map((line) => line.trim())
         .filter((line) => line.length > 0);
+
     if (lines.length === 0) {
         return false;
     }
 
-    // 모든 줄이 빈 불릿(`-` 또는 `- `)인지 확인
-    const allEmptyBullets = lines.every((line) => EMPTY_BULLET.test(line));
-    if (allEmptyBullets) {
-        return false;
-    }
+    const hasContent = lines.some((line) => {
+        const isEmptyBullet = /^-\s*$/.test(line);
+        return !isEmptyBullet;
+    });
 
-    // 실제 내용이 있는지 확인 (길이 또는 불릿에 내용)
-    return (
-        content.trim().length >= MIN_DESCRIPTION_LENGTH ||
-        BULLET_WITH_CONTENT.test(content)
-    );
+    return hasContent;
 }
 
 function getSectionContent(body, sectionHeader) {
