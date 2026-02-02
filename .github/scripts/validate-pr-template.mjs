@@ -1,14 +1,11 @@
 import { readFileSync } from 'fs';
 
-const MIN_DESCRIPTION_LENGTH = 10;
 const REQUIRED_SECTIONS = [
     '## ✨ 작업 내용',
     '## 🧠 구현 포인트',
     '## ⚠️ 리뷰 포인트',
     '## ✅ 체크리스트',
 ];
-const BULLET_WITH_CONTENT = /-\s+.+/;
-const EMPTY_BULLET = /^-\s*$/m;
 const CHECKBOX_CHECKED = /-\s*\[\s*x\s*\]/i;
 
 function hasValidContent(content) {

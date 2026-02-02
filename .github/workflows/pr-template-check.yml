@@ -2,7 +2,7 @@ name: PR 템플릿 검증
 
 on:
     pull_request:
-        types: [opened, edited, synchronize]
+        types: [opened, edited]
         branches:
             - 'main'
 
