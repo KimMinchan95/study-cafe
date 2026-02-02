@@ -8,8 +8,31 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint --max-warnings 0",
-    "check-types": "next typegen && tsc --noEmit"
+    "check-types": "next typegen && tsc --noEmit",
+    "size-limit": "size-limit"
   },
+  "size-limit": [
+    {
+      "path": ".next/static/chunks/pages/_app-*.js",
+      "limit": "200 KB",
+      "name": "App bundle"
+    },
+    {
+      "path": ".next/static/chunks/pages/index-*.js",
+      "limit": "100 KB",
+      "name": "Home page bundle"
+    },
+    {
+      "path": ".next/static/chunks/main-*.js",
+      "limit": "150 KB",
+      "name": "Main bundle"
+    },
+    {
+      "path": ".next/static/chunks/webpack-*.js",
+      "limit": "50 KB",
+      "name": "Webpack runtime"
+    }
+  ],
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
     "@repo/shared": "workspace:*",

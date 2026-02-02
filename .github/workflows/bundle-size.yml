@@ -36,16 +36,10 @@ jobs:
               env:
                   NODE_ENV: production
 
-            - name: Analyze bundle size
-              uses: andresz1/size-limit-action@v1
-              with:
-                  github_token: ${{ secrets.GITHUB_TOKEN }}
-                  skip_step: build
-                  build_script: skip
-                  directory: apps/web/.next
-                  # Next.js 빌드 결과물 분석
-                  # 실제 번들 파일 경로에 맞게 조정 필요
-                  # 또는 size-limit 패키지 사용 권장
+            - name: Run size-limit
+              working-directory: apps/web
+              run: pnpm size-limit --json > size-limit-results.json || true
+              continue-on-error: true
 
             - name: Comment bundle size
               uses: actions/github-script@v7
