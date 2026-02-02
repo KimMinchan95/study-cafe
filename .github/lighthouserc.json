@@ -2,7 +2,7 @@
   "ci": {
     "collect": {
       "numberOfRuns": 1,
-      "startServerCommand": "cd apps/web && pnpm start",
+      "startServerCommand": "pnpm --filter web start",
       "url": [
         "http://localhost:3000"
       ]

@@ -5,6 +5,10 @@ on:
         types: [opened, synchronize]
         branches:
             - 'main'
+        paths:
+            - 'apps/web/**'
+            - '.github/workflows/lighthouse.yml'
+            - '.github/lighthouserc.json'
 
 permissions:
     contents: read
@@ -32,15 +36,24 @@ jobs:
               run: pnpm install --frozen-lockfile
 
             - name: Build web app
-              run: pnpm --filter web build
+              working-directory: apps/web
+              run: pnpm build
               env:
                   NODE_ENV: production
 
             - name: Start Next.js server
+              working-directory: apps/web
               run: |
-                  cd apps/web
                   pnpm start &
-                  sleep 10
+                  echo "Waiting for server to start..."
+                  for i in {1..30}; do
+                    if curl -f http://localhost:3000 > /dev/null 2>&1; then
+                      echo "Server is ready!"
+                      break
+                    fi
+                    echo "Attempt $i: Server not ready yet..."
+                    sleep 2
+                  done
               env:
                   PORT: 3000
 
