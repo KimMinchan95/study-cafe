@@ -1,5 +1,11 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+
+@custom-variant dark (&&:where(.dark, .dark *));
+
+@utility container {
+    @apply mx-auto;
+}
 
 body {
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+    font-family: var(--font-geist-sans), system-ui, sans-serif;
 }

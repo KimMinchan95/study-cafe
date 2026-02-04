@@ -1,14 +1,19 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
+import Provider from './provider';
+
+import Header from '@/components/layout/header';
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
     variable: '--font-geist-sans',
+    display: 'swap',
 });
 const geistMono = localFont({
     src: './fonts/GeistMonoVF.woff',
     variable: '--font-geist-mono',
+    display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -22,9 +27,15 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="ko">
-            <body className={`${geistSans.variable} ${geistMono.variable}`}>
-                {children}
+        <html lang="ko" suppressHydrationWarning>
+            <body
+                className={`${geistSans.variable} ${geistMono.variable}`}
+                suppressHydrationWarning
+            >
+                <Provider>
+                    <Header />
+                    {children}
+                </Provider>
             </body>
         </html>
     );
