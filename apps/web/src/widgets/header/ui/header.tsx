@@ -24,7 +24,7 @@ export default function Header() {
                     />
                 </Link>
                 <div className="flex items-center gap-2">
-                    <nav className="flex items-center gap-2">
+                    <nav className="flex items-center gap-1">
                         {TABS.map((tab) => (
                             <Button
                                 key={tab.href}
