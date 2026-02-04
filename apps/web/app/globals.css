@@ -3,7 +3,10 @@
 @custom-variant dark (&&:where(.dark, .dark *));
 
 @utility container {
-    @apply mx-auto;
+    margin-inline: auto;
+    padding-inline: 2rem;
+    max-width: 1200px;
+    width: 100%;
 }
 
 body {
