@@ -1,5 +1,1 @@
-import { MyPage } from '@/views/my-page';
-
-export default function Page() {
-    return <MyPage />;
-}
+export { MyPage as default } from '@/views/my-page';

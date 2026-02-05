@@ -1,5 +1,1 @@
-import { StaticsPage } from '@/views/statics';
-
-export default function Page() {
-    return <StaticsPage />;
-}
+export { StaticsPage as default } from '@/views/statics';
