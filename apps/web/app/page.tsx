@@ -1,5 +1,1 @@
-import { redirect } from 'next/navigation';
-
-export default function Home() {
-    redirect('/cafe');
-}
+export { HomePage as default } from '@/views/home';
