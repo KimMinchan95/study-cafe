@@ -3,5 +3,12 @@
         "Cafes": "카페",
         "Statics": "통계",
         "My Page": "마이페이지"
+    },
+    "MyInfo": {
+        "Account": "계정",
+        "Settings": "설정",
+        "DarkMode": "다크모드",
+        "LightMode": "라이트모드",
+        "Logout": "로그아웃"
     }
 }

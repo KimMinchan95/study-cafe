@@ -15,7 +15,12 @@ export default function ThemeToggle() {
 
     if (!mounted) {
         return (
-            <Button variant="ghost" size="icon" disabled>
+            <Button
+                variant="ghost"
+                size="icon"
+                className="h-auto w-auto p-0"
+                disabled
+            >
                 <Sun className="size-4" />
             </Button>
         );
@@ -24,7 +29,12 @@ export default function ThemeToggle() {
     const iconClassName = 'size-4 transition-all duration-600';
 
     return (
-        <Button variant="ghost" size="icon" onClick={handleThemeToggle}>
+        <Button
+            variant="ghost"
+            size="icon"
+            className="h-auto w-auto p-0"
+            onClick={handleThemeToggle}
+        >
             {resolvedTheme === 'light' ? (
                 <Moon className={`${iconClassName} rotate-0`} />
             ) : (

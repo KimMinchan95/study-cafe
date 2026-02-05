@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Logo from '@/public/logo.svg';
 import ThemeToggle from '@/shared/ui/theme-toggle';
 import Navigation from './navigation';
+import MyInfo from './my-info';
 
 export default function Header() {
     return (
@@ -18,6 +19,7 @@ export default function Header() {
                 </Link>
                 <div className="flex items-center gap-2">
                     <Navigation />
+                    <MyInfo />
                     <ThemeToggle />
                 </div>
             </div>

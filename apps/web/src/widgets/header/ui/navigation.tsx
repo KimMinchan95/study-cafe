@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Button } from '@/shared/ui/button';
 import { cn } from '@/shared/lib/utils';
+import { removeLocalePrefix } from '@/shared/lib/pathname';
 import { useTranslations } from 'next-intl';
 import { User, ChartColumn, Coffee } from 'lucide-react';
 
@@ -17,16 +18,21 @@ export default function Navigation() {
     const pathname = usePathname();
     const t = useTranslations('Menu');
 
+    const pathnameWithoutLocale = removeLocalePrefix(pathname);
+
     return (
         <nav className="flex items-center gap-1">
             {TABS.map((tab) => {
-                const isActive = pathname === tab.href;
+                const isActive = pathnameWithoutLocale === tab.href;
                 return (
                     <Button
                         key={tab.href}
                         variant="ghost"
                         size="sm"
-                        className={cn(isActive && 'bg-green-900 text-white')}
+                        className={cn(
+                            isActive && 'bg-green-900 text-white',
+                            'hover:bg-green-700 hover:text-white'
+                        )}
                         asChild
                     >
                         <Link href={tab.href}>
