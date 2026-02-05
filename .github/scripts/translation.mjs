@@ -1,10 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
+// workflow-config.json에서 설정 읽기
+const configPath = path.join(__dirname, '..', 'workflow-config.json');
+const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+
 // 번역할 파일 경로 설정 (input -> output 매핑)
-const translatePairs = config.translationFiles.map((file) => ({
-    input: path.join(__dirname, file.input),
-    output: path.join(__dirname, file.output),
+const translatePairs = config['translation-files'].map((file) => ({
+    input: path.join(__dirname, '..', '..', file.input),
+    output: path.join(__dirname, '..', '..', file.output),
 }));
 
 // 단일 파일 처리 함수

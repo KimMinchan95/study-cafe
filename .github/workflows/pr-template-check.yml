@@ -21,7 +21,7 @@ jobs:
                   node -e "
                   const cfg = require('./.github/workflow-config.json');
                   const baseRef = process.env.BASE_REF;
-                  const run = cfg.targetBranches && cfg.targetBranches.includes(baseRef);
+                  const run = cfg['target-branches'] && cfg['target-branches'].includes(baseRef);
                   require('fs').appendFileSync(process.env.GITHUB_OUTPUT, 'run=' + run + '\n');
                   "
               env:
