@@ -28,11 +28,13 @@ jobs:
                   BASE_REF: ${{ github.event.pull_request.base.ref }}
 
             - name: Use Node.js
+              if: steps.check.outputs.run == 'true'
               uses: actions/setup-node@v3
               with:
                   node-version: 24
 
             - name: PR 본문 가져오기
+              if: steps.check.outputs.run == 'true'
               env:
                   GH_TOKEN: ${{ github.token }}
               run: |
@@ -42,4 +44,5 @@ jobs:
                     -q .body > pr_body.md
 
             - name: PR 템플릿 검증
+              if: steps.check.outputs.run == 'true'
               run: node .github/scripts/validate-pr-template.mjs pr_body.md

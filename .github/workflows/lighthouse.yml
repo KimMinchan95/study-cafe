@@ -20,37 +20,43 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Check Workflow Branches
-                  run: |
+              id: check
+              run: |
                   node -e "
                   const cfg = require('./.github/workflow-config.json');
                   const baseRef = process.env.BASE_REF;
-                  const run = cfg.targetBranches && cfg.targetBranches.includes(baseRef);
+                  const run = cfg['target-branches'] && cfg['target-branches'].includes(baseRef);
                   require('fs').appendFileSync(process.env.GITHUB_OUTPUT, 'run=' + run + '\n');
                   "
               env:
                   BASE_REF: ${{ github.event.pull_request.base.ref }}
 
             - name: Setup pnpm
+              if: steps.check.outputs.run == 'true'
               uses: pnpm/action-setup@v4
               with:
                   version: 9.0.0
 
             - name: Setup Node.js
+              if: steps.check.outputs.run == 'true'
               uses: actions/setup-node@v4
               with:
                   node-version: 24
                   cache: 'pnpm'
 
             - name: Install dependencies
+              if: steps.check.outputs.run == 'true'
               run: pnpm install --frozen-lockfile
 
             - name: Build web app
+              if: steps.check.outputs.run == 'true'
               working-directory: apps/web
               run: pnpm build
               env:
                   NODE_ENV: production
 
             - name: Start Next.js server
+              if: steps.check.outputs.run == 'true'
               working-directory: apps/web
               run: |
                   pnpm start &
@@ -73,6 +79,7 @@ jobs:
                   PORT: 3000
 
             - name: Run Lighthouse CI
+              if: steps.check.outputs.run == 'true'
               uses: treosh/lighthouse-ci-action@v11
               with:
                   urls: |
@@ -82,8 +89,8 @@ jobs:
                   configPath: ./.github/lighthouserc.json
 
             - name: Format Lighthouse score
+              if: steps.check.outputs.run == 'true' && always()
               uses: actions/github-script@v7
-              if: always()
               with:
                   script: |
                       const { execSync } = require('child_process');
