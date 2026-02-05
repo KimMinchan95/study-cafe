@@ -6,10 +6,9 @@
     },
     "MyInfo": {
         "Account": "Account",
-        "Profile": "Profile",
         "Settings": "Settings",
-        "DarkMode": "Dark Mode",
-        "LightMode": "Light Mode",
+        "DarkMode": "DarkMode",
+        "LightMode": "LightMode",
         "Logout": "Logout"
     }
 }
