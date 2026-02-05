@@ -4,8 +4,9 @@ import { Button } from '@/shared/ui/button';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useDidMount } from '@/shared/hooks';
+import { cn } from '@/shared/lib/utils';
 
-export default function ThemeToggle() {
+function ThemeToggle() {
     const { resolvedTheme, setTheme } = useTheme();
     const mounted = useDidMount();
 
@@ -18,7 +19,7 @@ export default function ThemeToggle() {
             <Button
                 variant="ghost"
                 size="icon"
-                className="h-auto w-auto p-0"
+                className="h-auto w-auto"
                 disabled
             >
                 <Sun className="size-4" />
@@ -26,20 +27,22 @@ export default function ThemeToggle() {
         );
     }
 
-    const iconClassName = 'size-4 transition-all duration-600';
+    const iconClassName = 'size-4 transition-all duration-600 cursor-pointer';
 
     return (
         <Button
             variant="ghost"
             size="icon"
-            className="h-auto w-auto p-0"
+            className="h-auto w-auto"
             onClick={handleThemeToggle}
         >
             {resolvedTheme === 'light' ? (
-                <Moon className={`${iconClassName} rotate-0`} />
+                <Moon className={cn(iconClassName, 'rotate-0')} />
             ) : (
-                <Sun className={`${iconClassName} rotate-90`} />
+                <Sun className={cn(iconClassName, 'rotate-90')} />
             )}
         </Button>
     );
 }
+
+export { ThemeToggle };
