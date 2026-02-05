@@ -3,8 +3,6 @@ name: Lighthouse 성능 점수
 on:
     pull_request:
         types: [opened, synchronize]
-        branches:
-            - 'main'
         paths:
             - 'apps/web/**'
             - '.github/workflows/lighthouse.yml'
@@ -20,6 +18,17 @@ jobs:
         steps:
             - name: Checkout
               uses: actions/checkout@v4
+
+            - name: Check Workflow Branches
+                  run: |
+                  node -e "
+                  const cfg = require('./.github/workflow-config.json');
+                  const baseRef = process.env.BASE_REF;
+                  const run = cfg.targetBranches && cfg.targetBranches.includes(baseRef);
+                  require('fs').appendFileSync(process.env.GITHUB_OUTPUT, 'run=' + run + '\n');
+                  "
+              env:
+                  BASE_REF: ${{ github.event.pull_request.base.ref }}
 
             - name: Setup pnpm
               uses: pnpm/action-setup@v4

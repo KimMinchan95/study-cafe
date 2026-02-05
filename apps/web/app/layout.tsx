@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
+import { getLocale } from 'next-intl/server';
 import './globals.css';
-import Provider from './provider';
-
-import { Header } from '@/widgets/header';
+import type { Locale } from '@/shared/locales';
 
 const geistSans = localFont({
     src: './fonts/GeistVF.woff',
@@ -21,21 +20,20 @@ export const metadata: Metadata = {
     description: '스터디 카페 좌석 예약 및 관리 시스템',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const locale = (await getLocale()) as Locale;
+
     return (
-        <html lang="ko" suppressHydrationWarning>
+        <html lang={locale} suppressHydrationWarning>
             <body
                 className={`${geistSans.variable} ${geistMono.variable}`}
                 suppressHydrationWarning
             >
-                <Provider>
-                    <Header />
-                    {children}
-                </Provider>
+                {children}
             </body>
         </html>
     );
