@@ -1,9 +1,11 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import Logo from '@/public/logo.svg';
-import ThemeToggle from '@/shared/ui/theme-toggle';
+import { ThemeToggle } from '@/features/theme';
+import { LocaleToggle } from '@/features/locale';
 import Navigation from './navigation';
 import MyInfo from './my-info';
+import { Separator } from '@/shared/ui';
 
 export default function Header() {
     return (
@@ -19,8 +21,17 @@ export default function Header() {
                 </Link>
                 <div className="flex items-center gap-2">
                     <Navigation />
-                    <MyInfo />
+                    <Separator
+                        className="h-4 bg-gray-200 dark:bg-gray-700"
+                        orientation="vertical"
+                    />
+                    <LocaleToggle />
+                    <Separator
+                        className="h-4 bg-gray-200 dark:bg-gray-700"
+                        orientation="vertical"
+                    />
                     <ThemeToggle />
+                    <MyInfo />
                 </div>
             </div>
         </header>
