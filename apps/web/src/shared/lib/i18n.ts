@@ -11,5 +11,6 @@ export default getRequestConfig(async ({ requestLocale }) => {
     return {
         locale,
         messages: LOCALES[locale],
+        timeZone: 'Asia/Seoul',
     };
 });
