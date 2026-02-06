@@ -5,3 +5,6 @@ export * from './navigation-menu';
 export * from './separator';
 export * from './toggle-group';
 export * from './toggle';
+export * from './dialog';
+export * from './field';
+export * from './label';

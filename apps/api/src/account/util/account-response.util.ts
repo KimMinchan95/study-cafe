@@ -1,5 +1,5 @@
 import type { Account } from '../../../generated/prisma/client';
-import type { AccountResponse } from '@repo/shared';
+import type { Account as AccountResponse } from '@repo/shared';
 
 type AccountResponseWithPassword = Omit<Account, 'accountId'> & {
     accountId: string;

@@ -10,4 +10,4 @@ const useDidMount = () => {
     return didMount;
 };
 
-export default useDidMount;
+export { useDidMount };

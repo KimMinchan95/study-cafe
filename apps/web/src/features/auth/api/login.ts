@@ -7,9 +7,3 @@ export async function login(email: string, password: string): Promise<Account> {
         body: JSON.stringify({ email, password }),
     });
 }
-
-export async function logout(): Promise<void> {
-    return fetchApi<void>('/auth/logout', {
-        method: 'POST',
-    });
-}

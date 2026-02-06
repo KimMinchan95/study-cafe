@@ -7,8 +7,17 @@
     "MyInfo": {
         "Account": "계정",
         "Settings": "설정",
-        "DarkMode": "다크모드",
-        "LightMode": "라이트모드",
-        "Logout": "로그아웃"
+        "Logout": "로그아웃",
+        "Sign In": "로그인",
+        "Sign Up": "회원가입",
+        "Email": "이메일",
+        "Password": "비밀번호",
+        "Enter Email": "이메일을 입력하세요",
+        "Enter Password": "비밀번호를 입력하세요"
+    },
+    "Common": {
+        "Cancel": "취소",
+        "Submit": "제출",
+        "Processing": "처리 중..."
     }
 }

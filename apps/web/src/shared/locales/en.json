@@ -7,8 +7,17 @@
     "MyInfo": {
         "Account": "Account",
         "Settings": "Settings",
-        "DarkMode": "DarkMode",
-        "LightMode": "LightMode",
-        "Logout": "Logout"
+        "Logout": "Logout",
+        "Sign In": "Sign In",
+        "Sign Up": "Sign Up",
+        "Email": "Email",
+        "Password": "Password",
+        "Enter Email": "Enter Email",
+        "Enter Password": "Enter Password"
+    },
+    "Common": {
+        "Cancel": "Cancel",
+        "Submit": "Submit",
+        "Processing": "Processing"
     }
 }
