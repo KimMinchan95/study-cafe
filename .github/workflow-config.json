@@ -1,0 +1,9 @@
+{
+    "target-branches": ["main"],
+    "translation-files": [
+        {
+            "input": "apps/web/src/shared/locales/ko.json",
+            "output": "apps/web/src/shared/locales/en.json"
+        }
+    ]
+}

@@ -11,38 +11,44 @@ import { RedisService } from '../redis';
  */
 @Injectable()
 export class SessionMiddleware implements NestMiddleware {
-  constructor(
-    private readonly config: AppConfigService,
-    private readonly redis: RedisService,
-  ) { }
+    constructor(
+        private readonly config: AppConfigService,
+        private readonly redis: RedisService
+    ) {}
 
-  use(req: Request, res: Response, next: NextFunction): void {
-    /* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
-    const sessionMiddleware = session({
-      store: this.redis.getSessionStore(),
-      secret: this.config.sessionSecret,
-      resave: false,
-      saveUninitialized: false,
-      cookie: {
-        httpOnly: true,
-        secure: this.config.isProduction,
-        sameSite: 'lax',
-        maxAge: 24 * 60 * 60 * 1000,
-      },
-    });
-
-    sessionMiddleware(req, res, (err?: Error) => {
-      if (err) {
-        next(err);
-        return;
-      }
-      passport.initialize()(req, res, (err2?: Error) => {
-        if (err2) {
-          next(err2);
-          return;
+    use(req: Request, res: Response, next: NextFunction): void {
+        // OPTIONS 요청은 CORS preflight이므로 세션 미들웨어를 건너뜀
+        if (req.method === 'OPTIONS') {
+            next();
+            return;
         }
-        passport.session()(req, res, next);
-      });
-    });
-  }
+
+        /* eslint-disable @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+        const sessionMiddleware = session({
+            store: this.redis.getSessionStore(),
+            secret: this.config.sessionSecret,
+            resave: false,
+            saveUninitialized: false,
+            cookie: {
+                httpOnly: true,
+                secure: this.config.isProduction,
+                sameSite: 'lax',
+                maxAge: 24 * 60 * 60 * 1000,
+            },
+        });
+
+        sessionMiddleware(req, res, (err?: Error) => {
+            if (err) {
+                next(err);
+                return;
+            }
+            passport.initialize()(req, res, (err2?: Error) => {
+                if (err2) {
+                    next(err2);
+                    return;
+                }
+                passport.session()(req, res, next);
+            });
+        });
+    }
 }

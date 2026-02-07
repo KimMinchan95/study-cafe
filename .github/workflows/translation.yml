@@ -1,0 +1,59 @@
+name: Update English language pack
+
+on:
+    pull_request:
+        types: [opened, synchronize]
+
+        paths:
+            - 'apps/web/src/shared/locales/ko.json'
+
+permissions:
+    contents: write
+    pull-requests: read
+
+jobs:
+    update-message-en:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.event.pull_request.head.ref }}
+
+            - name: Check Workflow Branches
+              id: check
+              run: |
+                  node -e "
+                  const cfg = require('./.github/workflow-config.json');
+                  const baseRef = process.env.BASE_REF;
+                  const run = cfg['target-branches'] && cfg['target-branches'].includes(baseRef);
+                  require('fs').appendFileSync(process.env.GITHUB_OUTPUT, 'run=' + run + '\n');
+                  "
+              env:
+                  BASE_REF: ${{ github.event.pull_request.base.ref }}
+
+            - name: Use Node.js
+              if: steps.check.outputs.run == 'true'
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 24
+
+            - name: Run script
+              if: steps.check.outputs.run == 'true'
+              run: node .github/scripts/translation.mjs
+
+            - name: Commit and Push
+              if: steps.check.outputs.run == 'true'
+              run: |
+                  git config --local user.name "github-actions[bot]"
+                  git config --local user.email "github-actions[bot]@users.noreply.github.com"
+                  git add .
+
+                  if ! git diff --staged --quiet; then
+                    git commit -m "chore(i18n): 영어 번역 파일 자동 업데이트"
+                    git push
+                  else
+                    echo "No changes to commit"
+                  fi
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

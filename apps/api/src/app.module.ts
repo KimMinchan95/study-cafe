@@ -11,29 +11,32 @@ import { AccountService } from './account/account.service';
 import { AccountModule } from './account/account.module';
 import { AuthModule } from './auth/auth.module';
 import { SessionMiddleware } from './session/session.middleware';
+import { CorsMiddleware } from './common/middleware/cors.middleware';
 import { HttpExceptionFilter, ResponseInterceptor } from './common';
 
 @Module({
-  imports: [
-    AppConfigModule,
-    PrismaModule,
-    RedisModule,
-    PasswordModule,
-    LoggerModule.forRoot(),
-    AccountModule,
-    AuthModule,
-  ],
-  controllers: [AppController],
-  providers: [
-    AppService,
-    AccountService,
-    SessionMiddleware,
-    { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
-    { provide: APP_FILTER, useClass: HttpExceptionFilter },
-  ],
+    imports: [
+        AppConfigModule,
+        PrismaModule,
+        RedisModule,
+        PasswordModule,
+        LoggerModule.forRoot(),
+        AccountModule,
+        AuthModule,
+    ],
+    controllers: [AppController],
+    providers: [
+        AppService,
+        AccountService,
+        SessionMiddleware,
+        CorsMiddleware,
+        { provide: APP_INTERCEPTOR, useClass: ResponseInterceptor },
+        { provide: APP_FILTER, useClass: HttpExceptionFilter },
+    ],
 })
 export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer): void {
-    consumer.apply(SessionMiddleware).forRoutes('*');
-  }
+    configure(consumer: MiddlewareConsumer): void {
+        consumer.apply(CorsMiddleware).forRoutes('*');
+        consumer.apply(SessionMiddleware).forRoutes('*');
+    }
 }

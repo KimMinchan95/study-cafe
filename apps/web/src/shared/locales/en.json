@@ -1,0 +1,40 @@
+{
+    "Menu": {
+        "Cafes": "Cafes",
+        "Statics": "Statics",
+        "My Page": "My Page"
+    },
+    "MyInfo": {
+        "Account": "Account",
+        "Settings": "Settings",
+        "Logout": "Logout",
+        "Sign In": "Sign In",
+        "Sign Up": "Sign Up",
+        "Email": "Email",
+        "Password": "Password",
+        "Enter Password": "Enter Password",
+        "Name": "Name",
+        "Nickname": "Nickname"
+    },
+    "Common": {
+        "Cancel": "Cancel",
+        "Submit": "Submit",
+        "Processing": "Processing"
+    },
+    "Auth": {
+        "Welcome back": "Welcome back",
+        "Sign in to your account to continue": "Sign in to your account to continue",
+        "Don't have an account?": "Don't have an account?",
+        "Create an account": "Create an account",
+        "Start reserving your study spots today": "Start reserving your study spots today",
+        "Password must contain at least one letter and one number, and be between 8 and 30 characters long": "Password must contain at least one letter and one number, and be between 8 and 30 characters long",
+        "Signup success": "Signup success",
+        "Signup error": "Signup error",
+        "Invalid email address": "Invalid email address",
+        "Valid email address": "Valid email address"
+    },
+    "Error": {
+        "INVALID_CREDENTIALS": "INVALID_CREDENTIALS",
+        "EMAIL_ALREADY_EXISTS": "EMAIL_ALREADY_EXISTS"
+    }
+}
