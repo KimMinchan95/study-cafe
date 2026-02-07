@@ -18,6 +18,12 @@ enum AccountStatus {
   SUSPENDED
 }
 
+enum SeatState {
+  IDLE
+  LOCKED
+  USING
+}
+
 model Account {
   accountId       BigInt        @id @default(autoincrement()) @map("account_id")
   email           String        @unique @map("email") @db.Text
@@ -26,11 +32,64 @@ model Account {
   displayName     String        @map("display_name") @db.VarChar(30)
   role            Role          @default(USER) @map("role")
   status          AccountStatus @default(ACTIVE) @map("status")
-  createdAt       DateTime  @map("created_at") @default(now())
-  updatedAt       DateTime? @map("updated_at") @updatedAt
-  lastLoginAt     DateTime? @map("last_login_at")
-  emailVerifiedAt DateTime? @map("email_verified_at")
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime?     @updatedAt @map("updated_at")
+  lastLoginAt     DateTime?     @map("last_login_at")
+  emailVerifiedAt DateTime?     @map("email_verified_at")
 
-  @@index([email])
   @@map("accounts")
+}
+
+model Cafe {
+  cafeId       BigInt    @id @default(autoincrement()) @map("cafe_id")
+  businessName String    @unique @map("business_name")
+  address1     String    @map("address1") @db.Text
+  address2     String    @map("address2") @db.Text
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime? @updatedAt @map("updated_at")
+
+  images CafeImages[]
+  seats  Seats[]
+  prices Prices[]
+
+  @@map("cafe")
+}
+
+model CafeImages {
+  imageId        BigInt @id @default(autoincrement()) @map("image_id")
+  cafeId         BigInt @map("cafe_id")
+  cafe Cafe @relation(fields: [cafeId], references: [cafeId])
+
+  imgSrc         String @map("img_src") @db.Text
+  originName     String @map("origin_name") @db.Text
+  identifiedName String @unique @map("identified_name") @db.Text
+  extensions     String @map("extensions") @db.VarChar(10)
+
+  @@map("cafe_images")
+}
+
+model Seats {
+  seatId     BigInt    @id @default(autoincrement()) @map("seat_id")
+  cafeId     BigInt    @map("cafe_id")
+  cafe Cafe @relation(fields: [cafeId], references: [cafeId])
+
+  seatName   String    @map("seat_name") @db.VarChar(10)
+  state      SeatState @default(IDLE) @map("state")
+  location   String    @map("location") @db.Text
+  seatNumber Int       @map("seat_number")
+  seatType   String    @map("seat_type") @db.VarChar(10)
+
+  @@map("seats")
+}
+
+model Prices {
+  priceId BigInt @id @default(autoincrement()) @map("price_id")
+  cafeId  BigInt @map("cafe_id")
+  cafe Cafe @relation(fields: [cafeId], references: [cafeId])
+
+  amountSubtotal Decimal @map("amount_subtotal") @db.Decimal(18, 2)
+  amountTax Decimal @map("amount_tax") @db.Decimal(18, 2) @default(0)
+  amountTotal Decimal @map("amount_total") @db.Decimal(18, 2)
+
+  @@map("prices")
 }
