@@ -30,10 +30,11 @@
         "Password must contain at least one letter and one number, and be between 8 and 30 characters long": "Password must contain at least one letter and one number, and be between 8 and 30 characters long",
         "Signup success": "Signup success",
         "Signup error": "Signup error",
-        "Invalid email address": "Invalid email address"
+        "Invalid email address": "Invalid email address",
+        "Valid email address": "Valid email address"
     },
     "Error": {
-        "INVALID_CREDENTIALS": "Invalid email or password.",
-        "EMAIL_ALREADY_EXISTS": "This email is already registered."
+        "INVALID_CREDENTIALS": "INVALID_CREDENTIALS",
+        "EMAIL_ALREADY_EXISTS": "EMAIL_ALREADY_EXISTS"
     }
 }
