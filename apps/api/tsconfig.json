@@ -25,5 +25,5 @@
             "@prisma/client": ["generated/prisma/client"]
         }
     },
-    "exclude": ["prisma.config.ts", "dist", "node_modules"]
+    "exclude": ["dist", "node_modules"]
 }
