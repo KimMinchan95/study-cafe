@@ -22,7 +22,7 @@ function ThemeToggle() {
                 className="h-auto w-auto"
                 disabled
             >
-                <Sun className="size-4" />
+                <Moon className="size-4" />
             </Button>
         );
     }

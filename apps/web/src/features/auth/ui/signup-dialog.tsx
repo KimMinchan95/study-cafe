@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import Image from 'next/image';
+import { useRef, useEffect } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -8,11 +9,19 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from '@/shared/ui/dialog';
-import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
-import { createAccount } from '@/entities/user';
-import type { CreateAccountDto } from '@/entities/user/api/user';
+    Field,
+    FieldGroup,
+    FieldLabel,
+    FieldContent,
+    FieldDescription,
+    Button,
+    Input,
+} from '@/shared/ui';
+import { useTranslations } from 'next-intl';
+import { cn } from '@/shared/lib/utils';
+import { useRegister, useSignupForm } from '@/features/auth';
+import { toast } from 'sonner';
+import { ErrorCode } from '@repo/shared';
 
 interface SignupDialogProps {
     open: boolean;
@@ -20,119 +29,191 @@ interface SignupDialogProps {
 }
 
 export function SignupDialog({ open, onClose }: SignupDialogProps) {
-    const [formData, setFormData] = useState<CreateAccountDto>({
-        email: '',
-        password: '',
-        name: '',
-        displayName: '',
-    });
-    const [isLoading, setIsLoading] = useState(false);
+    const tAuth = useTranslations('Auth');
+    const tMyInfo = useTranslations('MyInfo');
+    const tCommon = useTranslations('Common');
+    const tError = useTranslations('Error');
+
+    const timeOutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const registerMutation = useRegister();
+
+    const {
+        formData,
+        onFormChange,
+        resetForm,
+        validation: { isPasswordInvalid, isEmailInvalid, isFormValid },
+    } = useSignupForm();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
+
+        if (!isFormValid) return;
 
         try {
-            await createAccount(formData);
-            // TODO: 성공 처리 (모달 닫기, 로그인 페이지로 이동 등)
-            onClose();
-        } catch (error) {
-            // TODO: 에러 처리
-        } finally {
-            setIsLoading(false);
+            await registerMutation.mutateAsync(formData);
+            toast.success(tAuth('Signup success'));
+            timeOutRef.current = setTimeout(() => {
+                onClose();
+                resetForm();
+            }, 1000);
+        } catch (err) {
+            toast.error(tAuth('Signup error'));
+            console.error(err);
         }
     };
 
-    const handleChange =
-        (field: keyof CreateAccountDto) =>
-        (e: React.ChangeEvent<HTMLInputElement>) => {
-            setFormData((prev: CreateAccountDto) => ({
-                ...prev,
-                [field]: e.target.value,
-            }));
+    useEffect(() => {
+        return () => {
+            if (timeOutRef.current) {
+                clearTimeout(timeOutRef.current);
+            }
         };
+    }, []);
 
     return (
-        <Dialog open={open} onOpenChange={() => onClose()}>
-            <DialogContent>
-                <DialogHeader>
-                    <DialogTitle>회원가입</DialogTitle>
-                    <DialogDescription>
-                        새 계정을 만들어 시작하세요.
-                    </DialogDescription>
-                </DialogHeader>
+        <Dialog
+            open={open}
+            onOpenChange={() => {
+                onClose();
+                resetForm();
+            }}
+        >
+            <DialogContent className="sm:max-w-sm" showCloseButton={false}>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+                    <DialogHeader className="items-center gap-2">
+                        <Image
+                            src={'/logo.svg'}
+                            alt="logo"
+                            width={180}
+                            height={100}
+                        />
+                        <DialogTitle className="text-xl">
+                            {tAuth('Create an account')}
+                        </DialogTitle>
+                        <DialogDescription className="text-sm text-gray-500">
+                            {tAuth('Start reserving your study spots today')}
+                        </DialogDescription>
+                    </DialogHeader>
+                    {registerMutation.error?.message ===
+                        ErrorCode.EMAIL_ALREADY_EXISTS && (
+                        <div className="text-center text-sm text-red-500">
+                            {tError(ErrorCode.EMAIL_ALREADY_EXISTS)}
+                        </div>
+                    )}
 
-                <div className="space-y-2">
-                    <label htmlFor="email" className="text-sm font-medium">
-                        이메일
-                    </label>
-                    <Input
-                        id="email"
-                        type="email"
-                        placeholder="example@email.com"
-                        value={formData.email}
-                        onChange={handleChange('email')}
-                        required
-                    />
-                </div>
+                    <FieldGroup className="gap-3">
+                        <Field>
+                            <FieldLabel htmlFor="email">
+                                {tMyInfo('Email')}
+                            </FieldLabel>
+                            <FieldContent>
+                                <Input
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    placeholder={'example@email.com'}
+                                    value={formData.email}
+                                    onChange={onFormChange}
+                                    required
+                                    disabled={registerMutation.isPending}
+                                />
+                            </FieldContent>
+                            <FieldDescription
+                                className={cn(
+                                    'text-xs',
+                                    'text-gray-500',
+                                    isEmailInvalid && 'text-red-500'
+                                )}
+                            >
+                                {tAuth(
+                                    isEmailInvalid
+                                        ? 'Invalid email address'
+                                        : 'Valid email address'
+                                )}
+                            </FieldDescription>
+                        </Field>
 
-                <div className="space-y-2">
-                    <label htmlFor="password" className="text-sm font-medium">
-                        비밀번호
-                    </label>
-                    <Input
-                        id="password"
-                        type="password"
-                        placeholder="비밀번호를 입력하세요"
-                        value={formData.password}
-                        onChange={handleChange('password')}
-                        required
-                    />
-                </div>
+                        <Field>
+                            <FieldLabel htmlFor="password">
+                                {tMyInfo('Password')}
+                            </FieldLabel>
+                            <FieldContent>
+                                <Input
+                                    id="password"
+                                    name="password"
+                                    type="password"
+                                    placeholder={tMyInfo('Enter Password')}
+                                    value={formData.password}
+                                    onChange={onFormChange}
+                                    required
+                                    disabled={registerMutation.isPending}
+                                />
+                            </FieldContent>
+                            <FieldDescription
+                                className={cn(
+                                    'text-xs',
+                                    'text-gray-500',
+                                    isPasswordInvalid && 'text-red-500'
+                                )}
+                            >
+                                {tAuth(
+                                    'Password must contain at least one letter and one number, and be between 8 and 30 characters long'
+                                )}
+                            </FieldDescription>
+                        </Field>
 
-                <div className="space-y-2">
-                    <label htmlFor="name" className="text-sm font-medium">
-                        이름
-                    </label>
-                    <Input
-                        id="name"
-                        type="text"
-                        placeholder="이름을 입력하세요"
-                        value={formData.name}
-                        onChange={handleChange('name')}
-                        required
-                    />
-                </div>
+                        <Field>
+                            <FieldLabel htmlFor="name">
+                                {tMyInfo('Name')}
+                            </FieldLabel>
+                            <FieldContent>
+                                <Input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    placeholder={tMyInfo('Name')}
+                                    value={formData.name}
+                                    onChange={onFormChange}
+                                    required
+                                    disabled={registerMutation.isPending}
+                                />
+                            </FieldContent>
+                        </Field>
 
-                <div className="space-y-2">
-                    <label
-                        htmlFor="displayName"
-                        className="text-sm font-medium"
-                    >
-                        표시 이름
-                    </label>
-                    <Input
-                        id="displayName"
-                        type="text"
-                        placeholder="표시할 이름을 입력하세요"
-                        value={formData.displayName}
-                        onChange={handleChange('displayName')}
-                        required
-                    />
-                </div>
+                        <Field>
+                            <FieldLabel htmlFor="displayName">
+                                {tMyInfo('Nickname')}
+                            </FieldLabel>
+                            <FieldContent>
+                                <Input
+                                    id="displayName"
+                                    name="displayName"
+                                    type="text"
+                                    placeholder={tMyInfo('Nickname')}
+                                    value={formData.displayName}
+                                    onChange={onFormChange}
+                                    required
+                                    disabled={registerMutation.isPending}
+                                />
+                            </FieldContent>
+                        </Field>
+                    </FieldGroup>
 
-                <DialogFooter>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        onClick={() => onClose()}
-                    >
-                        취소
-                    </Button>
-                    <Button type="submit" disabled={isLoading}>
-                        {isLoading ? '처리 중...' : '회원가입'}
-                    </Button>
-                </DialogFooter>
+                    <DialogFooter className="mt-2 flex-col gap-2">
+                        <Button
+                            className="w-full rounded-xl bg-green-900 text-white hover:bg-green-800"
+                            type="submit"
+                            disabled={
+                                registerMutation.isPending || !isFormValid
+                            }
+                        >
+                            {registerMutation.isPending
+                                ? tCommon('Processing')
+                                : tMyInfo('Sign Up')}
+                        </Button>
+                    </DialogFooter>
+                </form>
             </DialogContent>
         </Dialog>
     );

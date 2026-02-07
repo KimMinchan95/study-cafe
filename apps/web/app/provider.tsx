@@ -5,6 +5,7 @@ import { ThemeProvider } from 'next-themes';
 import { NextIntlClientProvider } from 'next-intl';
 import { LOCALES, type Locale } from '@/shared/locales';
 import { queryClient } from '@/shared/lib/query-client';
+import { Toaster } from '@/shared/ui/sonner';
 
 export default function Provider({
     children,
@@ -22,6 +23,7 @@ export default function Provider({
                     enableSystem
                 >
                     {children}
+                    <Toaster position="top-center" />
                 </ThemeProvider>
             </NextIntlClientProvider>
         </QueryClientProvider>

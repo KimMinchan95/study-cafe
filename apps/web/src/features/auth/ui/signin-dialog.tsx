@@ -1,43 +1,59 @@
 'use client';
 
-import { useState } from 'react';
+import Image from 'next/image';
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from '@/shared/ui/dialog';
-import { Button } from '@/shared/ui/button';
-import { Input } from '@/shared/ui/input';
-import { Field, FieldGroup, FieldLabel, FieldContent } from '@/shared/ui/field';
-import { useInputs } from '@/shared/hooks';
-import { useLogin } from '@/features/auth';
+    Button,
+    Input,
+    Field,
+    FieldGroup,
+    FieldLabel,
+    FieldContent,
+    FieldDescription,
+} from '@/shared/ui';
+import { useLogin, useSigninForm } from '@/features/auth';
 import { useTranslations } from 'next-intl';
+import { cn } from '@/shared/lib/utils';
+import { ErrorCode } from '@repo/shared';
+
+const INVALID_CREDENTIALS_CODE = 401;
 
 interface SigninDialogProps {
     open: boolean;
     onClose: () => void;
+    onOpenSignup?: () => void;
 }
 
-export function SigninDialog({ open, onClose }: SigninDialogProps) {
+export function SigninDialog({
+    open,
+    onClose,
+    onOpenSignup,
+}: SigninDialogProps) {
     const t = useTranslations('MyInfo');
     const tCommon = useTranslations('Common');
+    const tAuth = useTranslations('Auth');
+    const tError = useTranslations('Error');
 
-    const [values, onChange, resetInputs] = useInputs({
-        email: '',
-        password: '',
-    });
     const loginMutation = useLogin();
+    const {
+        formData,
+        onFormChange,
+        resetForm,
+        validation: { isEmailInvalid, isPasswordInvalid, isFormValid },
+    } = useSigninForm();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            await loginMutation.mutateAsync(values);
-            resetInputs();
+            await loginMutation.mutateAsync(formData);
+            resetForm();
+            onClose();
         } catch (err) {
             console.error(err);
         }
@@ -45,22 +61,29 @@ export function SigninDialog({ open, onClose }: SigninDialogProps) {
 
     return (
         <Dialog open={open} onOpenChange={() => onClose()}>
-            <DialogContent className="sm:max-w-sm">
-                <form onSubmit={handleSubmit}>
-                    <DialogHeader>
-                        <DialogTitle>{t('Sign In')}</DialogTitle>
-                        <DialogDescription>
-                            계정에 로그인하여 시작하세요.
+            <DialogContent className="sm:max-w-sm" showCloseButton={false}>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-2">
+                    <DialogHeader className="items-center gap-2">
+                        <Image
+                            src={'/logo.svg'}
+                            alt="logo"
+                            width={180}
+                            height={100}
+                        />
+                        <DialogTitle className="text-xl">
+                            {tAuth('Welcome back')}
+                        </DialogTitle>
+                        <DialogDescription className="text-sm text-gray-500">
+                            {tAuth('Sign in to your account to continue')}
                         </DialogDescription>
                     </DialogHeader>
-
-                    {loginMutation.isError && (
-                        <div className="bg-destructive/10 text-destructive rounded-md p-3 text-sm">
-                            이메일 또는 비밀번호가 올바르지 않습니다.
+                    {loginMutation.error?.status ===
+                        INVALID_CREDENTIALS_CODE && (
+                        <div className="text-center text-sm text-red-500">
+                            {tError(ErrorCode.INVALID_CREDENTIALS)}
                         </div>
                     )}
-
-                    <FieldGroup>
+                    <FieldGroup className="gap-3">
                         <Field>
                             <FieldLabel htmlFor="email">
                                 {t('Email')}
@@ -70,13 +93,26 @@ export function SigninDialog({ open, onClose }: SigninDialogProps) {
                                     id="email"
                                     name="email"
                                     type="email"
-                                    placeholder={t('Enter Email')}
-                                    value={values.email}
-                                    onChange={onChange}
+                                    placeholder={'you@example.com'}
+                                    value={formData.email}
+                                    onChange={onFormChange}
                                     required
                                     disabled={loginMutation.isPending}
                                 />
                             </FieldContent>
+                            <FieldDescription
+                                className={cn(
+                                    'text-xs',
+                                    'text-gray-500',
+                                    isEmailInvalid && 'text-red-500'
+                                )}
+                            >
+                                {tAuth(
+                                    isEmailInvalid
+                                        ? 'Invalid email address'
+                                        : 'Valid email address'
+                                )}
+                            </FieldDescription>
                         </Field>
                         <Field>
                             <FieldLabel htmlFor="password">
@@ -88,36 +124,48 @@ export function SigninDialog({ open, onClose }: SigninDialogProps) {
                                     name="password"
                                     type="password"
                                     placeholder={t('Enter Password')}
-                                    value={values.password}
-                                    onChange={onChange}
+                                    value={formData.password}
+                                    onChange={onFormChange}
                                     required
                                     disabled={loginMutation.isPending}
                                 />
                             </FieldContent>
+                            <FieldDescription
+                                className={cn(
+                                    'text-xs',
+                                    'text-gray-500',
+                                    isPasswordInvalid && 'text-red-500'
+                                )}
+                            >
+                                {tAuth(
+                                    'Password must contain at least one letter and one number, and be between 8 and 30 characters long'
+                                )}
+                            </FieldDescription>
                         </Field>
                     </FieldGroup>
 
-                    <DialogFooter>
-                        <DialogClose asChild>
-                            <Button
-                                type="button"
-                                variant="outline"
-                                onClick={() => {
-                                    resetInputs();
-                                }}
-                                disabled={loginMutation.isPending}
-                            >
-                                {tCommon('Cancel')}
-                            </Button>
-                        </DialogClose>
+                    <DialogFooter className="mt-2 flex-col gap-2">
                         <Button
+                            className="w-full rounded-xl bg-green-900 text-white hover:bg-green-800"
                             type="submit"
-                            disabled={loginMutation.isPending}
+                            disabled={loginMutation.isPending || !isFormValid}
                         >
                             {loginMutation.isPending
                                 ? tCommon('Processing')
                                 : t('Sign In')}
                         </Button>
+                        <span className="text-center text-sm text-gray-500">
+                            {tAuth("Don't have an account?")}
+                            <Button
+                                variant="link"
+                                onClick={() => {
+                                    onClose();
+                                    onOpenSignup?.();
+                                }}
+                            >
+                                {t('Sign Up')}
+                            </Button>
+                        </span>
                     </DialogFooter>
                 </form>
             </DialogContent>

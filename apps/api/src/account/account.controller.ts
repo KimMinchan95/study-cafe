@@ -1,12 +1,12 @@
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UseGuards,
+    Controller,
+    Get,
+    Post,
+    Body,
+    Patch,
+    Param,
+    Delete,
+    UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AccountService } from './account.service';
@@ -18,37 +18,37 @@ import { OwnerGuard } from '../auth/guards/owner.guard';
 @ApiTags('account')
 @Controller('accounts')
 export class AccountController {
-  constructor(private readonly accountService: AccountService) { }
+    constructor(private readonly accountService: AccountService) {}
 
-  @Post()
-  create(@Body() createAccountDto: CreateAccountDto) {
-    return this.accountService.create(createAccountDto);
-  }
+    @Post()
+    create(@Body() createAccountDto: CreateAccountDto) {
+        return this.accountService.create(createAccountDto);
+    }
 
-  @UseGuards(SessionGuard)
-  @Get()
-  findAll() {
-    return this.accountService.findAll();
-  }
+    @UseGuards(SessionGuard)
+    @Get()
+    findAll() {
+        return this.accountService.findAll();
+    }
 
-  @UseGuards(SessionGuard)
-  @Get(':accountId')
-  findOneById(@Param('accountId') accountId: string) {
-    return this.accountService.findOne(BigInt(accountId));
-  }
+    @UseGuards(SessionGuard)
+    @Get(':accountId')
+    findOneById(@Param('accountId') accountId: string) {
+        return this.accountService.findOne(BigInt(accountId));
+    }
 
-  @UseGuards(SessionGuard, OwnerGuard)
-  @Patch(':accountId')
-  update(
-    @Param('accountId') accountId: string,
-    @Body() updateAccountDto: UpdateAccountDto,
-  ) {
-    return this.accountService.update(BigInt(accountId), updateAccountDto);
-  }
+    @UseGuards(SessionGuard, OwnerGuard)
+    @Patch(':accountId')
+    update(
+        @Param('accountId') accountId: string,
+        @Body() updateAccountDto: UpdateAccountDto
+    ) {
+        return this.accountService.update(BigInt(accountId), updateAccountDto);
+    }
 
-  @UseGuards(SessionGuard, OwnerGuard)
-  @Delete(':accountId')
-  remove(@Param('accountId') accountId: string) {
-    return this.accountService.remove(BigInt(accountId));
-  }
+    @UseGuards(SessionGuard, OwnerGuard)
+    @Delete(':accountId')
+    remove(@Param('accountId') accountId: string) {
+        return this.accountService.remove(BigInt(accountId));
+    }
 }

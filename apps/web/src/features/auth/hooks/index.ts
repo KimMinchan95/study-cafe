@@ -4,3 +4,6 @@ export * from './use-login';
 export * from './use-signup';
 export * from './use-logout';
 export * from './use-auth-state';
+export * from './use-signup-form';
+export * from './use-signin-form';
+export * from './use-register';
