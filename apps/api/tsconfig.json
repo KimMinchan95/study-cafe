@@ -22,8 +22,10 @@
         "noFallthroughCasesInSwitch": false,
         "paths": {
             "@prisma": ["src/prisma/index"],
-            "@prisma/client": ["generated/prisma/client"]
+            "@prisma/client": ["generated/prisma/client"],
+            "@repo/shared": ["../../packages/shared/src/index.ts"]
         }
     },
+    "include": ["src", "../../packages/shared/src"],
     "exclude": ["dist", "node_modules"]
 }

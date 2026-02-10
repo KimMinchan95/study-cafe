@@ -13,6 +13,7 @@ import { AuthModule } from './auth/auth.module';
 import { SessionMiddleware } from './session/session.middleware';
 import { CorsMiddleware } from './common/middleware/cors.middleware';
 import { HttpExceptionFilter, ResponseInterceptor } from './common';
+import { CafeModule } from './cafe/cafe.module';
 
 @Module({
     imports: [
@@ -23,6 +24,7 @@ import { HttpExceptionFilter, ResponseInterceptor } from './common';
         LoggerModule.forRoot(),
         AccountModule,
         AuthModule,
+        CafeModule,
     ],
     controllers: [AppController],
     providers: [
