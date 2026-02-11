@@ -1,4 +1,4 @@
-import type { Cafe } from '../../../generated/prisma/client';
+import type { Cafe } from '@generated/prisma/client';
 
 type CafeResponse = Omit<Cafe, 'cafeId'> & {
     cafeId: string;

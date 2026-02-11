@@ -44,33 +44,16 @@ services:
             redis:
                 condition: service_healthy
         volumes:
-            - .:/usr/src/app
+            # 소스만 마운트해 이미지의 node_modules 유지 (라이브 리로드용)
+            - ./apps/api/src:/usr/src/app/apps/api/src
+            - ./apps/api/prisma:/usr/src/app/apps/api/prisma
+            - ./packages/shared:/usr/src/app/packages/shared
         environment:
+            NODE_ENV: development
             PORT: 3001
             DATABASE_URL: postgresql://postgres:postgres@db:5432/study_cafe
             REDIS_HOST: redis
             REDIS_PORT: 6379
-
-    # web 실행 주석 처리
-    # web:
-    #     build:
-    #         context: .
-    #         dockerfile: Dockerfile.web
-    #     container_name: study-cafe-web
-    #     ports:
-    #         - '3000:3000'
-    #     volumes:
-    #         - .:/usr/src/app
-    #         - /usr/src/app/apps/web/.next
-    #         - /usr/src/app/node_modules
-    #     environment:
-    #         NODE_ENV: development
-    #         PORT: 3000
-    #         NEXT_PUBLIC_API_URL: http://api:3001
-    #         WATCHPACK_POLLING: 'true'
-    #         CHOKIDAR_USEPOLLING: 'true'
-    #     depends_on:
-    #         - api
 
 volumes:
     postgres_data:

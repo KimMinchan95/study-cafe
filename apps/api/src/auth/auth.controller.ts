@@ -12,7 +12,7 @@ import { LoginDto } from './dto/login.dto';
 import { toAccountResponse } from '../account/util';
 import { SessionGuard } from './guards/session.guard';
 
-import type { Account } from '../../generated/prisma/client';
+import type { Account } from '@generated/prisma/client';
 
 interface RequestWithAccount extends Request {
     user: Account;

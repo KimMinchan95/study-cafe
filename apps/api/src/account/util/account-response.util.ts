@@ -1,4 +1,4 @@
-import type { Account } from '../../../generated/prisma/client';
+import type { Account } from '@generated/prisma/client';
 
 type AccountResponse = Omit<Account, 'password' | 'accountId'> & {
     accountId: string;
@@ -14,8 +14,11 @@ export function toAccountResponse(account: Account): AccountResponse {
 }
 
 export function toAccountResponseWithPassword(
-    account: Account,
+    account: Account
 ): AccountResponseWithPassword {
     const { accountId, ...rest } = account;
-    return { accountId: String(accountId), ...rest } as AccountResponseWithPassword;
+    return {
+        accountId: String(accountId),
+        ...rest,
+    } as AccountResponseWithPassword;
 }
