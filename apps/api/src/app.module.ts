@@ -13,6 +13,9 @@ import { AuthModule } from './auth/auth.module';
 import { SessionMiddleware } from './session/session.middleware';
 import { CorsMiddleware } from './common/middleware/cors.middleware';
 import { HttpExceptionFilter, ResponseInterceptor } from './common';
+import { CafeModule } from './cafe/cafe.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
     imports: [
@@ -23,6 +26,11 @@ import { HttpExceptionFilter, ResponseInterceptor } from './common';
         LoggerModule.forRoot(),
         AccountModule,
         AuthModule,
+        CafeModule,
+        ServeStaticModule.forRoot({
+            rootPath: join(__dirname, '../uploads'),
+            serveRoot: '/cafe-images',
+        }),
     ],
     controllers: [AppController],
     providers: [

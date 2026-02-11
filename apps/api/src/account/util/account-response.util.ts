@@ -1,5 +1,8 @@
-import type { Account } from '../../../generated/prisma/client';
-import type { Account as AccountResponse } from '@repo/shared';
+import type { Account } from '@generated/prisma/client';
+
+type AccountResponse = Omit<Account, 'password' | 'accountId'> & {
+    accountId: string;
+};
 
 type AccountResponseWithPassword = Omit<Account, 'accountId'> & {
     accountId: string;
@@ -18,12 +21,4 @@ export function toAccountResponseWithPassword(
         accountId: String(accountId),
         ...rest,
     } as AccountResponseWithPassword;
-}
-
-export function toJsonSafeResponse<T>(obj: T): T {
-    return JSON.parse(
-        JSON.stringify(obj, (_key, value) =>
-            typeof value === 'bigint' ? String(value) : value
-        )
-    ) as T;
 }
