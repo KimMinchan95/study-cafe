@@ -1,10 +1,27 @@
-import type { Cafe } from '@generated/prisma/client';
+import type { Cafe, CafeImages } from '@generated/prisma/client';
 
-type CafeResponse = Omit<Cafe, 'cafeId'> & {
-    cafeId: string;
+type CafeImageResponse = Omit<CafeImages, 'imageId' | 'cafeId'> & {
+    imageId: string;
 };
 
-export function toCafeResponse(cafe: Cafe): CafeResponse {
-    const { cafeId, ...rest } = cafe;
-    return { cafeId: String(cafeId), ...rest } as CafeResponse;
+export type CafeResponse = Omit<Cafe, 'cafeId'> & {
+    cafeId: string;
+    images?: CafeImageResponse[];
+};
+
+function toCafeImageResponse(image: CafeImages): CafeImageResponse {
+    const { imageId, cafeId: _cafeId, ...rest } = image;
+    return { imageId: String(imageId), ...rest };
+}
+
+export function toCafeResponse(
+    cafe: Cafe & { images?: CafeImages[] },
+): CafeResponse {
+    const { cafeId, images, ...rest } = cafe;
+    const base: CafeResponse = {
+        cafeId: String(cafeId),
+        ...rest,
+        images: (images ?? []).map(toCafeImageResponse),
+    };
+    return base;
 }
