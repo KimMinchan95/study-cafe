@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { IsArray, IsNotEmpty, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { ErrorCode } from '@repo/shared';
 
 export class CreateCafeDto {
@@ -33,9 +33,11 @@ export class CreateCafeDto {
     @MaxLength(255, { message: ErrorCode.MUST_BE_AT_MOST_255_CHARACTERS })
     address2: string;
 
-    @ApiProperty({
-        description: 'The images of the cafe',
+    @ApiPropertyOptional({
+        description: 'The images of the cafe (multipart/form-data)',
         example: [],
     })
-    images: Express.Multer.File[];
+    @IsOptional()
+    @IsArray()
+    images?: Express.Multer.File[];
 }

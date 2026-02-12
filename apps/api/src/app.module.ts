@@ -17,6 +17,9 @@ import { CafeModule } from './cafe/cafe.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
+/** 카페 이미지 업로드 디렉터리 (저장·정적 제공 공통, process.cwd() 기준) */
+export const UPLOADS_ROOT = join(process.cwd(), 'uploads');
+
 @Module({
     imports: [
         AppConfigModule,
@@ -28,7 +31,7 @@ import { join } from 'path';
         AuthModule,
         CafeModule,
         ServeStaticModule.forRoot({
-            rootPath: join(__dirname, '../uploads'),
+            rootPath: UPLOADS_ROOT,
             serveRoot: '/cafe-images',
         }),
     ],

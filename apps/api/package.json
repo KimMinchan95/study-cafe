@@ -10,6 +10,7 @@
         "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
         "start": "npx prisma generate --schema=prisma/schema.prisma && nest start",
         "dev": "npx prisma generate --schema=prisma/schema.prisma && nest start --watch",
+        "dev:clean": "rm -rf dist && pnpm dev",
         "start:dev": "npx prisma generate --schema=prisma/schema.prisma && nest start --watch",
         "start:debug": "nest start --debug --watch",
         "start:prod": "node dist/main",
