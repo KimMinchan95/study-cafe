@@ -16,7 +16,11 @@ export default function Provider({
 }) {
     return (
         <QueryClientProvider client={queryClient}>
-            <NextIntlClientProvider locale={locale} messages={LOCALES[locale]}>
+            <NextIntlClientProvider
+                locale={locale}
+                messages={LOCALES[locale]}
+                timeZone="Asia/Seoul"
+            >
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
