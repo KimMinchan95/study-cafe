@@ -1,4 +1,9 @@
 {
+    "Common": {
+        "Cancel": "Cancel",
+        "Submit": "Submit",
+        "Processing": "Processing"
+    },
     "Menu": {
         "Cafes": "Cafes",
         "Statics": "Statics",
@@ -16,10 +21,9 @@
         "Name": "Name",
         "Nickname": "Nickname"
     },
-    "Common": {
-        "Cancel": "Cancel",
-        "Submit": "Submit",
-        "Processing": "Processing"
+    "Cafe": {
+        "Find my study spot": "Find my study spot",
+        "Reserve a seat at the nearest study cafe": "Reserve a seat at the nearest study cafe"
     },
     "Auth": {
         "Welcome back": "Welcome back",
