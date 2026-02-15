@@ -7,7 +7,14 @@ const config: Config = {
         './src/**/*.{js,ts,jsx,tsx,mdx}',
     ],
     theme: {
-        extend: {},
+        extend: {
+            colors: {
+                foreground: 'hsl(var(--foreground))',
+                muted: {
+                    foreground: 'hsl(var(--muted-foreground))',
+                },
+            },
+        },
     },
     plugins: [],
 };

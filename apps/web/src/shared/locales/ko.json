@@ -1,4 +1,9 @@
 {
+    "Common": {
+        "Cancel": "취소",
+        "Submit": "제출",
+        "Processing": "처리 중..."
+    },
     "Menu": {
         "Cafes": "카페",
         "Statics": "통계",
@@ -16,10 +21,9 @@
         "Name": "이름",
         "Nickname": "별명"
     },
-    "Common": {
-        "Cancel": "취소",
-        "Submit": "제출",
-        "Processing": "처리 중..."
+    "Cafe": {
+        "Find my study spot": "나만의 스터디 공간 찾기",
+        "Reserve a seat at the nearest study cafe": "가까운 스터디 카페에서 좌석을 예약하세요"
     },
     "Auth": {
         "Welcome back": "다시 오신 것을 환영합니다",
