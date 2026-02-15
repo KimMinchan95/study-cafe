@@ -111,7 +111,7 @@ function TypographyMuted({
     );
 }
 
-const Typography = {
+export const Typography = {
     H1: TypographyH1,
     H2: TypographyH2,
     H3: TypographyH3,
@@ -120,5 +120,3 @@ const Typography = {
     Small: TypographySmall,
     Muted: TypographyMuted,
 };
-
-export default Typography;
