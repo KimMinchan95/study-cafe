@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { LogIn, LogOut, User } from 'lucide-react';
 import {
     NavigationMenu,
@@ -31,12 +32,13 @@ export default function MyInfo() {
         setFalse: closeSignupDialog,
     } = useToggle(false);
 
+    const router = useRouter();
     const { user, isAuthenticated, isLoading } = useAuthState();
     const logoutMutation = useLogout();
 
     const handleLogout = async () => {
         await logoutMutation.mutateAsync();
-        window.location.href = '/';
+        router.push('/');
     };
 
     if (isLoading || !isAuthenticated || !user) {
@@ -45,7 +47,7 @@ export default function MyInfo() {
                 <Button
                     variant="outline"
                     size="sm"
-                    className="hover:bg-green-700 hover:text-white"
+                    className="hover:bg-accent hover:text-accent-foreground"
                     onClick={openSigninDialog}
                 >
                     <LogIn className="size-4" />
@@ -71,8 +73,8 @@ export default function MyInfo() {
             <NavigationMenu>
                 <NavigationMenuList>
                     <NavigationMenuItem>
-                        <NavigationMenuTrigger className="mx-2 h-7 gap-1 border border-gray-200 px-2 shadow-2xs">
-                            <span className="rounded-full bg-green-100/80 px-1 text-green-900">
+                        <NavigationMenuTrigger className="mx-2 h-7 gap-1 border border-border px-2 shadow-2xs">
+                            <span className="rounded-full bg-accent/20 px-1 text-accent">
                                 {displayName.charAt(0)}
                             </span>
                             <span className="hidden max-w-[3rem] truncate sm:inline">
@@ -85,28 +87,28 @@ export default function MyInfo() {
                                     <p className="truncate px-3 text-xs font-bold">
                                         {displayName}
                                     </p>
-                                    <p className="px-3 text-xs text-gray-500">
+                                    <p className="px-3 text-xs text-muted-foreground">
                                         {user.email}
                                     </p>
                                 </li>
-                                <Separator className="bg-gray-200 dark:bg-gray-700" />
+                                <Separator className="bg-border" />
                                 <li>
                                     <Link
                                         href="/my-page"
-                                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-green-700 hover:text-white"
+                                        className="flex items-center gap-2 rounded-md px-3 py-2 text-sm transition-colors hover:bg-accent hover:text-accent-foreground"
                                     >
                                         <User className="size-4" />
                                         {tMenu('My Page')}
                                     </Link>
                                 </li>
                                 <li>
-                                    <Separator className="bg-gray-200 dark:bg-gray-700" />
+                                    <Separator className="bg-border" />
                                 </li>
                                 <li>
                                     <Button
                                         onClick={handleLogout}
                                         disabled={logoutMutation.isPending}
-                                        className="flex w-full justify-start gap-2 rounded-md px-3 py-2 text-sm text-red-500 transition-colors hover:bg-red-500 hover:text-white disabled:opacity-50"
+                                        className="flex w-full justify-start gap-2 rounded-md px-3 py-2 text-sm text-destructive transition-colors hover:bg-destructive hover:text-destructive-foreground disabled:opacity-50"
                                     >
                                         <LogOut className="size-4" />
                                         {logoutMutation.isPending
