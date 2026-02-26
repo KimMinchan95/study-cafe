@@ -2,7 +2,10 @@
     "Common": {
         "Cancel": "취소",
         "Submit": "제출",
-        "Processing": "처리 중..."
+        "Processing": "처리 중...",
+        "Loading": "로딩 중...",
+        "Error": "오류가 발생했습니다.",
+        "No data": "데이터가 없습니다."
     },
     "Menu": {
         "Cafes": "카페",
@@ -23,7 +26,10 @@
     },
     "Cafe": {
         "Find my study spot": "나만의 스터디 공간 찾기",
-        "Reserve a seat at the nearest study cafe": "가까운 스터디 카페에서 좌석을 예약하세요"
+        "Reserve a seat at the nearest study cafe": "가까운 스터디 카페에서 좌석을 예약하세요",
+        "Seats available": "석 이용 가능",
+        "Search by name or location": "이름 또는 위치로 검색...",
+        "No search results": "검색 결과가 없습니다"
     },
     "Auth": {
         "Welcome back": "다시 오신 것을 환영합니다",
