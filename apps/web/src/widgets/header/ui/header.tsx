@@ -6,20 +6,23 @@ import { LocaleToggle } from '@/features/locale';
 import Navigation from './navigation';
 import MyInfo from './my-info';
 import { Separator } from '@/shared/ui';
+import { HeaderScrollWrapper } from './header-scroll-wrapper';
 
 export default function Header() {
     return (
-        <>
+        <HeaderScrollWrapper>
             <header className="h-12 border-b border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-800">
                 <div className="container flex h-full items-center justify-between">
-                    <Link href="/">
-                        <Image
-                            src={Logo}
-                            alt="Study Cafe Logo"
-                            width={100}
-                            height={100}
-                        />
-                    </Link>
+                    <div>
+                        <Link href="/" className="hidden sm:inline">
+                            <Image
+                                src={Logo}
+                                alt="Study Cafe Logo"
+                                width={100}
+                                height={100}
+                            />
+                        </Link>
+                    </div>
                     <div className="flex items-center gap-2">
                         <Navigation />
                         <Separator
@@ -36,6 +39,6 @@ export default function Header() {
                     </div>
                 </div>
             </header>
-        </>
+        </HeaderScrollWrapper>
     );
 }

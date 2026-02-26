@@ -81,18 +81,39 @@ function TypographyLarge({
     );
 }
 
+function TypographyMedium({
+    className,
+    children,
+    ...props
+}: React.ComponentProps<'div'>) {
+    return (
+        <div className={cn('text-base font-semibold', className)} {...props}>
+            {children}
+        </div>
+    );
+}
+
 function TypographySmall({
     className,
     children,
     ...props
-}: React.ComponentProps<'small'>) {
+}: React.ComponentProps<'div'>) {
     return (
-        <small
-            className={cn('text-sm leading-none font-medium', className)}
-            {...props}
-        >
+        <div className={cn('text-sm font-semibold', className)} {...props}>
             {children}
-        </small>
+        </div>
+    );
+}
+
+function TypographyXSmall({
+    className,
+    children,
+    ...props
+}: React.ComponentProps<'div'>) {
+    return (
+        <div className={cn('text-xs font-semibold', className)} {...props}>
+            {children}
+        </div>
     );
 }
 
@@ -117,6 +138,8 @@ export const Typography = {
     H3: TypographyH3,
     P: TypographyP,
     Large: TypographyLarge,
+    Medium: TypographyMedium,
     Small: TypographySmall,
+    XSmall: TypographyXSmall,
     Muted: TypographyMuted,
 };

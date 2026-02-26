@@ -1,6 +1,8 @@
 import { Typography } from '@/shared/ui';
 import { useTranslations } from 'next-intl';
 
+import CafeList from './cafe-list';
+
 export default function CafePage() {
     const t = useTranslations('Cafe');
 
@@ -10,6 +12,7 @@ export default function CafePage() {
             <Typography.Muted>
                 {t('Reserve a seat at the nearest study cafe')}
             </Typography.Muted>
+            <CafeList />
         </main>
     );
 }

@@ -2,7 +2,10 @@
     "Common": {
         "Cancel": "Cancel",
         "Submit": "Submit",
-        "Processing": "Processing"
+        "Processing": "Processing",
+        "Loading": "Loading",
+        "Error": "Error",
+        "No data": "No data"
     },
     "Menu": {
         "Cafes": "Cafes",
@@ -23,7 +26,10 @@
     },
     "Cafe": {
         "Find my study spot": "Find my study spot",
-        "Reserve a seat at the nearest study cafe": "Reserve a seat at the nearest study cafe"
+        "Reserve a seat at the nearest study cafe": "Reserve a seat at the nearest study cafe",
+        "Seats available": "Seats available",
+        "Search by name or location": "Search by name or location",
+        "No search results": "No search results"
     },
     "Auth": {
         "Welcome back": "Welcome back",

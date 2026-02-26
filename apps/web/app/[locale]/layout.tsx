@@ -14,7 +14,7 @@ export default async function LocaleLayout({
     return (
         <Provider locale={locale}>
             <Header />
-            {children}
+            <div className="pt-12">{children}</div>
         </Provider>
     );
 }
