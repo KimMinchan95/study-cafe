@@ -1,1 +1,1 @@
-export { getCafeList } from './api/cafe';
+export { getCafeById, getCafeList } from './api/cafe';
