@@ -2,11 +2,13 @@
 
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { CafeCard, getCafeList } from '@/entities/cafe';
+import { getCafeList } from '@/entities/cafe';
 import { useDebouncedValue } from '@/shared/hooks';
 import { Input } from '@/shared/ui';
 import { useTranslations } from 'next-intl';
 import { Search } from 'lucide-react';
+
+import CafeCard from './cafe-card';
 import type { Cafe } from '@repo/shared';
 
 const SEARCH_DEBOUNCE_MS = 300;
