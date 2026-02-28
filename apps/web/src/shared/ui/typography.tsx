@@ -54,6 +54,24 @@ function TypographyH3({
     );
 }
 
+function TypographyH4({
+    className,
+    children,
+    ...props
+}: React.ComponentProps<'h4'>) {
+    return (
+        <h4
+            className={cn(
+                'scroll-m-20 text-xl font-semibold tracking-tight',
+                className
+            )}
+            {...props}
+        >
+            {children}
+        </h4>
+    );
+}
+
 function TypographyP({
     className,
     children,
@@ -136,6 +154,7 @@ export const Typography = {
     H1: TypographyH1,
     H2: TypographyH2,
     H3: TypographyH3,
+    H4: TypographyH4,
     P: TypographyP,
     Large: TypographyLarge,
     Medium: TypographyMedium,
