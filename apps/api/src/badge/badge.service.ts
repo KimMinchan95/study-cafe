@@ -3,6 +3,7 @@ import { CreateBadgeDto } from './dto/create-badge.dto';
 import { UpdateBadgeDto } from './dto/update-badge.dto';
 import { PrismaConnector } from '../prisma';
 import { ErrorCode } from '@repo/shared';
+import { toBadgeResponse } from './util/badge-response.util';
 
 @Injectable()
 export class BadgeService {
@@ -17,21 +18,24 @@ export class BadgeService {
             throw new NotFoundException(ErrorCode.CAFE_NOT_FOUND);
         }
 
-        return this.prisma.cafeBadges.create({
+        const badge = await this.prisma.cafeBadges.create({
             data: {
                 cafeId,
                 title: createBadgeDto.title,
                 bgColor: createBadgeDto.bgColor ?? '#ffffff',
                 txtColor: createBadgeDto.txtColor ?? '#000000',
             },
+            include: { cafe: true },
         });
+        return toBadgeResponse(badge);
     }
 
     async findAll() {
-        return this.prisma.cafeBadges.findMany({
+        const badges = await this.prisma.cafeBadges.findMany({
             orderBy: { badgeId: 'desc' },
             include: { cafe: true },
         });
+        return badges.map(toBadgeResponse);
     }
 
     async findOne(badgeId: bigint) {
@@ -42,7 +46,7 @@ export class BadgeService {
         if (!badge) {
             throw new NotFoundException(ErrorCode.BADGE_NOT_FOUND);
         }
-        return badge;
+        return toBadgeResponse(badge);
     }
 
     async update(badgeId: bigint, updateBadgeDto: UpdateBadgeDto) {
@@ -53,7 +57,7 @@ export class BadgeService {
             throw new NotFoundException(ErrorCode.BADGE_NOT_FOUND);
         }
 
-        return this.prisma.cafeBadges.update({
+        const badge = await this.prisma.cafeBadges.update({
             where: { badgeId },
             data: {
                 ...(updateBadgeDto.cafeId !== undefined && {
@@ -71,6 +75,7 @@ export class BadgeService {
             },
             include: { cafe: true },
         });
+        return toBadgeResponse(badge);
     }
 
     async remove(badgeId: bigint) {
@@ -81,9 +86,10 @@ export class BadgeService {
             throw new NotFoundException(ErrorCode.BADGE_NOT_FOUND);
         }
 
-        return this.prisma.cafeBadges.delete({
+        const badge = await this.prisma.cafeBadges.delete({
             where: { badgeId },
             include: { cafe: true },
         });
+        return toBadgeResponse(badge);
     }
 }

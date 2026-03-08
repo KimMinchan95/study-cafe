@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import * as classTransformer from 'class-transformer';
 import {
     IsNotEmpty,
     IsOptional,
@@ -10,10 +11,13 @@ import { ErrorCode } from '@repo/shared';
 
 export class CreateBadgeDto {
     @ApiProperty({
-        description: '카페 ID',
-        example: '1',
+        description: '카페 ID (문자열 또는 숫자)',
+        example: 13,
     })
     @IsNotEmpty({ message: ErrorCode.THIS_FIELD_IS_REQUIRED })
+    @classTransformer.Transform(({ value }: { value: unknown }) =>
+        typeof value === 'number' ? String(value) : value,
+    )
     @IsString({ message: ErrorCode.MUST_BE_STRING })
     cafeId: string;
 
