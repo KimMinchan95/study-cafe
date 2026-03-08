@@ -58,6 +58,27 @@ export default async function CafeDetail({ params }: CafeDetailProps) {
                                 .join(', ')}
                         </span>
                     </Typography.Muted>
+                    {cafe.badges?.length ? (
+                        <div className="mt-4 flex flex-col gap-2">
+                            <Typography.Muted>
+                                {t('Convenience facilities')}
+                            </Typography.Muted>
+                            <div className="flex flex-wrap gap-2">
+                                {cafe.badges.map((badge) => (
+                                    <span
+                                        key={badge.badgeId}
+                                        className="inline-flex items-center rounded-lg px-3 py-1.5 text-sm font-medium shadow-sm ring-1 ring-black/5"
+                                        style={{
+                                            backgroundColor: badge.bgColor,
+                                            color: badge.txtColor,
+                                        }}
+                                    >
+                                        {badge.title}
+                                    </span>
+                                ))}
+                            </div>
+                        </div>
+                    ) : null}
                 </article>
                 <aside className="flex-1">
                     {/* TODO: 카페정보 넣기 */}

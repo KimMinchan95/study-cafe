@@ -16,6 +16,7 @@ import { HttpExceptionFilter, ResponseInterceptor } from './common';
 import { CafeModule } from './cafe/cafe.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { BadgeModule } from './badge/badge.module';
 
 /** 카페 이미지 업로드 디렉터리 (저장·정적 제공 공통, process.cwd() 기준) */
 export const UPLOADS_ROOT = join(process.cwd(), 'uploads');
@@ -34,6 +35,7 @@ export const UPLOADS_ROOT = join(process.cwd(), 'uploads');
             rootPath: UPLOADS_ROOT,
             serveRoot: '/cafe-images',
         }),
+        BadgeModule,
     ],
     controllers: [AppController],
     providers: [
