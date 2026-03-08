@@ -52,7 +52,6 @@ model Cafe {
   images CafeImages[]
   seats  Seats[]
   prices Prices[]
-  badges CafeBadges[]
 
   @@map("cafe")
 }
@@ -94,17 +93,4 @@ model Prices {
   amountTotal Decimal @map("amount_total") @db.Decimal(18, 2)
 
   @@map("prices")
-}
-
-
-model CafeBadges {
-  badgeId BigInt @id @default(autoincrement()) @map("badge_id")
-  cafeId BigInt @map("cafe_id")
-  cafe Cafe @relation(fields: [cafeId], references: [cafeId])
-
-  title String @map("title") @db.VarChar(255)
-  bgColor String @map("bg_color") @db.VarChar(10) @default("#ffffff")
-  txtColor String @map("text_color") @db.VarChar(10) @default("#000000")
-
-  @@map("cafe_badges")
 }

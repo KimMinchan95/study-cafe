@@ -43,7 +43,7 @@ export default function CafeCard({ cafe }: CafeCardProps) {
                         </Typography.Muted>
                     </div>
                 </div>
-                <CardContent className="space-y-2">
+                <CardContent>
                     <div className="flex items-center gap-1 font-light text-lime-700 dark:text-lime-400">
                         <Users className="h-3 w-3" />
                         <Typography.XSmall>
@@ -53,22 +53,6 @@ export default function CafeCard({ cafe }: CafeCardProps) {
                             / {EXAMPLE_TOTAL_SEATS}
                         </Typography.XSmall>
                     </div>
-                    {cafe.badges?.length ? (
-                        <div className="flex flex-wrap gap-1.5 pt-1">
-                            {cafe.badges.map((badge) => (
-                                <span
-                                    key={badge.badgeId}
-                                    className="inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium shadow-sm ring-1 ring-black/5"
-                                    style={{
-                                        backgroundColor: badge.bgColor,
-                                        color: badge.txtColor,
-                                    }}
-                                >
-                                    {badge.title}
-                                </span>
-                            ))}
-                        </div>
-                    ) : null}
                 </CardContent>
             </Card>
         </Link>

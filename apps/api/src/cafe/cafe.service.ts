@@ -65,7 +65,7 @@ export class CafeService {
     async findAll() {
         const cafes = await this.prisma.cafe.findMany({
             orderBy: { createdAt: 'desc' },
-            include: { images: true, badges: true },
+            include: { images: true },
         });
         return cafes.map(toCafeResponse);
     }
@@ -73,7 +73,7 @@ export class CafeService {
     async findOne(cafeId: bigint) {
         const cafe = await this.prisma.cafe.findUnique({
             where: { cafeId },
-            include: { images: true, badges: true },
+            include: { images: true },
         });
         if (!cafe) {
             throw new NotFoundException(ErrorCode.CAFE_NOT_FOUND);
