@@ -92,6 +92,7 @@ model Prices {
   amountSubtotal Decimal @map("amount_subtotal") @db.Decimal(18, 2)
   amountTax Decimal @map("amount_tax") @db.Decimal(18, 2) @default(0)
   amountTotal Decimal @map("amount_total") @db.Decimal(18, 2)
+  duration Decimal @map("duration") @db.Decimal(18, 2)
 
   @@map("prices")
 }
