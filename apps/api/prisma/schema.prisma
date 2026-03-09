@@ -75,7 +75,7 @@ model Seats {
   cafeId     BigInt    @map("cafe_id")
   cafe Cafe @relation(fields: [cafeId], references: [cafeId])
 
-  seatName   String    @map("seat_name") @db.VarChar(20)
+  seatName   String    @map("seat_name") @db.Text
   state      SeatState @default(IDLE) @map("state")
   location   String    @map("location") @db.Text
   seatNumber Int       @map("seat_number")
