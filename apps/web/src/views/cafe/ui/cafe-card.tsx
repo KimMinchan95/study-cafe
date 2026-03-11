@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import { cn } from '@/shared/lib/utils';
 
 import { CafeImages } from '@/views/cafe';
 import { Card, CardContent, Typography } from '@/shared/ui';
@@ -8,8 +9,7 @@ import { MapPin, Users } from 'lucide-react';
 
 import type { Cafe } from '@repo/shared';
 
-const EXAMPLE_AVAILABLE_SEATS = 10;
-const EXAMPLE_TOTAL_SEATS = 20;
+const SEAT_SCARCITY_PERCENT = 0.33;
 
 interface CafeCardProps {
     cafe: Cafe;
@@ -19,6 +19,15 @@ export default function CafeCard({ cafe }: CafeCardProps) {
     const t = useTranslations('Cafe');
     const imageUrls =
         cafe.images?.map((img) => `${API_BASE_URL}${img.imgSrc}`) ?? [];
+
+    const availableSeats =
+        cafe.seats?.filter((seat) => seat.state === 'IDLE').length ?? 0;
+    const totalSeats = cafe.seats?.length ?? 0;
+    const seatScarcity = totalSeats * SEAT_SCARCITY_PERCENT;
+    const isSeatScarcity = availableSeats <= seatScarcity;
+    const cheapestPrice = cafe.prices?.sort(
+        (a, b) => Number(a.amountTotal) - Number(b.amountTotal)
+    )[0];
 
     return (
         <Link href={`/cafe/${cafe.cafeId}`}>
@@ -44,14 +53,27 @@ export default function CafeCard({ cafe }: CafeCardProps) {
                     </div>
                 </div>
                 <CardContent className="space-y-2">
-                    <div className="flex items-center gap-1 font-light text-lime-700 dark:text-lime-400">
-                        <Users className="h-3 w-3" />
-                        <Typography.XSmall>
-                            {`${EXAMPLE_AVAILABLE_SEATS}${t('Seats available')}`}
-                        </Typography.XSmall>
-                        <Typography.XSmall className="font-extralight text-black dark:text-white">
-                            / {EXAMPLE_TOTAL_SEATS}
-                        </Typography.XSmall>
+                    <div className="flex items-center justify-between">
+                        <div
+                            className={cn(
+                                'flex items-center gap-1 font-light text-lime-700 dark:text-lime-400',
+                                isSeatScarcity &&
+                                    'text-yellow-500 dark:text-yellow-400'
+                            )}
+                        >
+                            <Users className="h-3 w-3" />
+                            <Typography.XSmall>
+                                {`${availableSeats}${t('Seats available')}`}
+                            </Typography.XSmall>
+                            <Typography.XSmall className="font-extralight text-black dark:text-white">
+                                / {totalSeats}
+                            </Typography.XSmall>
+                        </div>
+                        <div className="rounded-lg bg-gray-200 px-2 py-1 dark:bg-gray-800">
+                            <Typography.XSmall>
+                                {cheapestPrice?.amountTotal}/{t('Hour')}
+                            </Typography.XSmall>
+                        </div>
                     </div>
                     {cafe.badges?.length ? (
                         <div className="flex flex-wrap gap-1.5 pt-1">
