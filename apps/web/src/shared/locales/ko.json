@@ -31,14 +31,7 @@
         "Search by name or location": "이름 또는 위치로 검색...",
         "No search results": "검색 결과가 없습니다",
         "Back to cafes": "카페로 돌아가기",
-        "Convenience facilities": "편의 시설",
-        "Hour": "시간",
-        "Select a seat": "좌석 선택",
-        "Available": "이용 가능",
-        "Selected": "선택됨",
-        "Using": "사용 중",
-        "Locked": "잠김",
-        "No seats": "등록된 좌석이 없습니다"
+        "Convenience facilities": "편의 시설"
     },
     "Auth": {
         "Welcome back": "다시 오신 것을 환영합니다",

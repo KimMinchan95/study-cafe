@@ -2,10 +2,9 @@ import { Module } from '@nestjs/common';
 import { BadgeService } from './badge.service';
 import { BadgeController } from './badge.controller';
 import { PrismaModule } from '../prisma';
-import { WithCafeIdDto } from '../common';
 
 @Module({
-    imports: [PrismaModule, WithCafeIdDto],
+    imports: [PrismaModule],
     controllers: [BadgeController],
     providers: [BadgeService],
     exports: [BadgeService],

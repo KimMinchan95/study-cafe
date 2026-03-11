@@ -75,11 +75,11 @@ model Seats {
   cafeId     BigInt    @map("cafe_id")
   cafe Cafe @relation(fields: [cafeId], references: [cafeId])
 
-  seatName   String    @map("seat_name") @db.Text
+  seatName   String    @map("seat_name") @db.VarChar(10)
   state      SeatState @default(IDLE) @map("state")
   location   String    @map("location") @db.Text
   seatNumber Int       @map("seat_number")
-  seatType   String    @map("seat_type") @db.VarChar(20)
+  seatType   String    @map("seat_type") @db.VarChar(10)
 
   @@map("seats")
 }
@@ -92,7 +92,6 @@ model Prices {
   amountSubtotal Decimal @map("amount_subtotal") @db.Decimal(18, 2)
   amountTax Decimal @map("amount_tax") @db.Decimal(18, 2) @default(0)
   amountTotal Decimal @map("amount_total") @db.Decimal(18, 2)
-  duration Decimal @map("duration") @db.Decimal(18, 2)
 
   @@map("prices")
 }

@@ -9,9 +9,7 @@ export type BadgeWithCafeResponse = BadgeResponse & {
     cafe?: Omit<Cafe, 'cafeId'> & { cafeId: string };
 };
 
-function toBadgeResponse(
-    badge: CafeBadges & { cafe?: Cafe },
-): BadgeWithCafeResponse {
+function toBadgeResponse(badge: CafeBadges & { cafe?: Cafe }): BadgeWithCafeResponse {
     const response: BadgeWithCafeResponse = {
         badgeId: String(badge.badgeId),
         cafeId: String(badge.cafeId),

@@ -39,7 +39,7 @@ export class CafeService {
             for (const file of files) {
                 if (!file.buffer) {
                     throw new BadRequestException(
-                        '이미지 파일이 비어 있습니다. form-data 필드 이름이 "images"인지, 파일이 첨부되었는지 확인하세요.'
+                        '이미지 파일이 비어 있습니다. form-data 필드 이름이 "images"인지, 파일이 첨부되었는지 확인하세요.',
                     );
                 }
                 const meta = saveCafeImage(cafe.cafeId, file);
@@ -65,7 +65,7 @@ export class CafeService {
     async findAll() {
         const cafes = await this.prisma.cafe.findMany({
             orderBy: { createdAt: 'desc' },
-            include: { images: true, badges: true, prices: true, seats: true },
+            include: { images: true, badges: true },
         });
         return cafes.map(toCafeResponse);
     }
@@ -73,7 +73,7 @@ export class CafeService {
     async findOne(cafeId: bigint) {
         const cafe = await this.prisma.cafe.findUnique({
             where: { cafeId },
-            include: { images: true, badges: true, prices: true, seats: true },
+            include: { images: true, badges: true },
         });
         if (!cafe) {
             throw new NotFoundException(ErrorCode.CAFE_NOT_FOUND);
