@@ -84,7 +84,7 @@ export function SeatGrid({ seats }: { seats: Cafe['seats'] }) {
                                                         seat.state
                                                     ),
                                                 isSelected &&
-                                                    'border-green-600 bg-green-600 text-white dark:border-green-500 dark:bg-green-600 dark:text-white'
+                                                    'border-green-600 bg-green-800 text-white dark:border-green-500 dark:bg-green-600 dark:text-white'
                                             )}
                                         >
                                             <Typography.Small
