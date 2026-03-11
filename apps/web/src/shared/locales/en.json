@@ -30,7 +30,15 @@
         "Seats available": "Seats available",
         "Search by name or location": "Search by name or location",
         "No search results": "No search results",
-        "Back to cafes": "Back to cafes"
+        "Back to cafes": "Back to cafes",
+        "Convenience facilities": "Convenience facilities",
+        "Hour": "Hour",
+        "Select a seat": "Select a seat",
+        "Available": "Available",
+        "Selected": "Selected",
+        "Using": "Using",
+        "Locked": "Locked",
+        "No seats": "No seats"
     },
     "Auth": {
         "Welcome back": "Welcome back",
